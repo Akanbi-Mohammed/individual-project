@@ -1,11 +1,11 @@
 # Plan
 
-* PROJECT TITLE
-* YOUR NAME
-* STUDENT ID
-* SUPERVISOR NAME
+* Personal Budget Tracker 
+* Mohammed Mustapha Akanbi
+* 2630425a
+* Dr. Sofiat Olaosebikan
 
-Week-by-week plan for the whole project. Update this as you go along.
+Week-by-week plan for the whole project. 
 
 ## Winter semester
 
