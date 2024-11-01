@@ -1,0 +1,175 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f4f4f9;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 60px);
+    margin-top: 70px;
+}
+
+.form-wrapper {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    width: 80%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+button {
+    padding: 10px;
+    background-color: #000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 48%;
+}
+
+.signup-btn {
+    background-color: #ddd;
+    color: #000;
+}
+
+button:hover {
+    background-color: #333;
+}
+
+.signup-btn:hover {
+    background-color: #bbb;
+}
+
+/* Navbar Styling */
+.navbar {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #808080;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar .nav-links {
+    display: flex;
+}
+
+.navbar .nav-links a {
+    margin: 0 15px;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar .nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f0f0f0;
+}
+
+footer p {
+    margin: 0;
+}
+/* Contact Section Styling */
+
+.contact-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px 0;
+}
+
+.contact-item {
+    margin: 0 20px;
+    text-align: center;
+}
+.contact-methods {
+    display: flex;
+    justify-content: center; /* Center the contact items */
+    align-items: center;
+    gap: 50px; /* Space between the contact items */
+}
+
+
+.contact-item img {
+    width: 80px; /* Adjust the icon size */
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.contact-item p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.contact-item a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.contact-item a:hover {
+    color: #0073e6; /* Change color on hover */
+}
+.about-section {
+    margin-bottom: 40px;
+    padding: 40px 0;
+    text-align: center;
+}
