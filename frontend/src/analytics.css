@@ -1,0 +1,214 @@
+.analytics-page {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.page-title {
+    text-align: center;
+    color: #333;
+    margin-top: 40px;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-btn {
+    padding: 5px 15px; /* Adjust padding to fit content */
+    font-size: 14px; /* Slightly smaller font for better fit */
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: auto; /* Adjust width automatically based on content */
+    min-width: 100px; /* Ensure minimum width for consistency */
+    height: auto; /* Let height adjust to fit text properly */
+    line-height: 1.5; /* Adjust line height for better readability */
+    text-align: center;
+    margin: 0 15px; /* Add space between buttons */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.nav-btn:hover {
+    background-color: #007acc;
+}
+
+.current-month {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.overview, .alerts, .comparison {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-text {
+    color: red;
+    font-weight: bold;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+
+.chart {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensure content stays inside */
+    text-align: center;
+}
+
+.chart h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333333;
+}
+
+.bar-chart {
+    width: 100%;
+    max-width: 300px; /* Limit the max width */
+    margin: 0 auto; /* Center align the chart */
+}
+
+.pie-chart,
+.vertical-progress-bar {
+    width: 100%;
+    max-width: 300px; /* Ensure uniformity */
+    margin: 0 auto;
+}
+
+.comparison {
+    background-color: #fdfdfd;
+    text-align: center; /* Center-align the contents */
+    margin: 20px 0;
+}
+
+.comparison-inputs {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+    text-align: center; /* Center-align the contents */
+
+}
+
+
+.compare-btn {
+    background-color: #FF6384;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block; /* Ensure it aligns as an inline element */
+    margin-top: 15px; /* Add spacing above the button */
+    transition: background-color 0.3s ease;
+
+}
+
+
+.compare-btn:hover {
+    background-color: #e60050;
+}
+.savings-summary {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.savings-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.savings-card {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.savings-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.savings-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.savings-value {
+    font-weight: bold;
+    color: #333;
+}
+
+.savings-highlight {
+    background: #e0ffe5;
+    border: 2px solid #28a745;
+}
+
+.savings-highlight .savings-label,
+.savings-highlight .savings-value {
+    color: #28a745;
+}
+/* Progress Bar Container */
+.progress-bar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%; /* Full width */
+    max-width: 300px; /* Optional: Limit max width */
+    height: 30px; /* Adjust height */
+    background: #f5f5f5; /* Light background */
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden;
+    margin: 0 auto; /* Center align container itself */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Bar Fill */
+.progress-bar {
+    height: 100%;
+    width: 0; /* Start width at 0 */
+    background-color: #FF6384; /* Bar color */
+    border-radius: 15px 0 0 15px; /* Rounded only on left */
+    transition: width 0.3s ease-in-out; /* Smooth width animation */
+}
+
+/* Centered Text Below Bar */
+.utilization-text {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1em;
+    color: #333;
+    font-weight: bold;
+}
+
