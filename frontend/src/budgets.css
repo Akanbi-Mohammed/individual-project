@@ -1,0 +1,264 @@
+/* Budget Tracker Styling */
+.budget-tracker-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.budget-tracker-title {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-top: 50px;
+}
+
+.budget-tracker-description {
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Form Section */
+.budget-tracker-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.budget-tracker-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.budget-tracker-form-description {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.budget-tracker-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.budget-tracker-button {
+    background-color: #333;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.budget-tracker-button:hover {
+    background-color: #007acc;
+}
+
+.budget-tracker-error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.budget-tracker-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.budget-tracker-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.budget-tracker-description {
+    font-size: 1rem;
+    color: #666;
+}
+
+.budget-tracker-form {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.budget-tracker-input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.budget-tracker-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.budget-tracker-button:hover {
+    background-color: #0056b3;
+}
+
+.budget-tracker-error {
+    color: #e74c3c;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.budget-tracker-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.budget-tracker-nav-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+}
+
+.budget-tracker-nav-button:hover {
+    background-color: #444;
+}
+
+.budget-tracker-current-month {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.budget-tracker-list {
+    margin-top: 1rem;
+}
+
+.budget-tracker-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.budget-tracker-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.budget-tracker-card-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.budget-tracker-edit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.budget-tracker-edit-button:hover {
+    background-color: #0056b3;
+}
+
+.budget-tracker-delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.budget-tracker-delete-button:hover {
+    background-color: #c82333;
+}
+
+.budget-tracker-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.budget-tracker-save-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.budget-tracker-save-button:hover {
+    background-color: #218838;
+}
+
+.budget-tracker-cancel-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.budget-tracker-cancel-button:hover {
+    background-color: #5a6268;
+}

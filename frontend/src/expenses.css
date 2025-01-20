@@ -1,0 +1,372 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #4e4e4e;
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0 1rem;
+}
+
+.expense-tracker {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.intro-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.intro-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+.expense-form {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-button {
+    background-color: #333;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.form-button:hover {
+    background-color: #444;
+}
+
+.cancel {
+    background-color: #888;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-top: 2rem;
+}
+
+.error-text {
+    color: #e74c3c;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.expenses-list {
+    margin-top: 1rem;
+}
+
+.expense-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.expense-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    cursor: pointer;
+}
+
+.expense-card-content p {
+    text-align: left;
+    margin: 5px 0;
+}
+
+
+.expense-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-button, .delete-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.edit-button {
+    background-color: #808080;
+}
+
+.edit-button:hover {
+    background-color: #2980b9;
+}
+
+.delete-button {
+    background-color: #111111;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}
+.expense-filters {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.expense-filters h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.filter-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-item label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.filter-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+}
+
+.filter-button:hover {
+    background-color: #555;
+}
+.edit-categories-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.category-input {
+    margin-top: 15px;
+
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #ffffff;
+    transition: border-color 0.3s;
+}
+
+.category-input:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(76, 175, 80, 0.5);
+}
+
+.save-category-button,
+.delete-category-button {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.save-category-button {
+    background-color: #808080;
+    color: white;
+}
+
+.save-category-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.delete-category-button {
+    background-color: #111111;
+    color: white;
+}
+
+.delete-category-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+.no-categories-message {
+    text-align: center;
+    color: #757575;
+    font-size: 14px;
+    margin: 10px 0;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+.month-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.month-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+}
+
+.month-button:hover {
+    background-color: #333;
+}
+
+.month-display {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.form-label {
+    margin-bottom: 20px;
+    display: block;
+    color: #444;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.form-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 4px;
+    text-align: left;
+}
+
+
+
+.form-button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.form-button.cancel {
+    background-color: #dc3545;
+}
+
+.form-button:hover {
+    background-color: #0056b3;
+}
+
+.form-button.cancel:hover {
+    background-color: #c82333;
+}
+.delete-category-x {
+    margin-left: 8px;
+    color: red;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.delete-category-x:hover {
+    color: darkred;
+}
+
