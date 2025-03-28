@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecurringExpenseController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.controller</a> &gt; <span class="el_source">RecurringExpenseController.java</span></div><h1>RecurringExpenseController.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.controller;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import example.com.budgetTracker.model.RecurringExpense;
+
+import example.com.budgetTracker.service.RecurringExpenseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(&quot;/api/recurring-expenses&quot;)
+@CrossOrigin(origins = &quot;https://level4-project.web.app&quot;)
+<span class="fc" id="L20">public class RecurringExpenseController {</span>
+
+    @Autowired
+    public RecurringExpenseService recurringExpenseService;
+
+    // Helper to get uid from Firebase token
+    public String getUidFromAuthorization(String authHeader) {
+<span class="nc" id="L27">        String token = authHeader;</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        if (authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L29">            token = authHeader.substring(7);</span>
+        }
+        try {
+<span class="nc" id="L32">            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);</span>
+<span class="nc" id="L33">            return decodedToken.getUid();</span>
+<span class="nc" id="L34">        } catch (Exception e) {</span>
+<span class="nc" id="L35">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Invalid token&quot;, e);</span>
+        }
+    }
+
+    // Create a new recurring expense
+    @PostMapping
+    public ResponseEntity&lt;String&gt; addRecurringExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @RequestBody RecurringExpense recurringExpense) {
+<span class="pc bpc" id="L44" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L45">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L47">        String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L48">        recurringExpense.setUserId(uid);</span>
+        try {
+
+<span class="fc" id="L51">            String id = recurringExpenseService.addRecurringExpense(recurringExpense);</span>
+
+
+<span class="fc" id="L54">            recurringExpenseService.syncRecurringExpenses(uid);</span>
+
+
+<span class="fc" id="L57">            return ResponseEntity.ok(&quot;Recurring expense added and synced with id: &quot; + id);</span>
+<span class="fc" id="L58">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L59">            e.printStackTrace();</span>
+<span class="fc" id="L60">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L61">                    .body(&quot;Error adding recurring expense: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // Get all recurring expenses for the authenticated user
+    @GetMapping
+    public ResponseEntity&lt;List&lt;RecurringExpense&gt;&gt; getRecurringExpenses(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader) {
+<span class="pc bpc" id="L69" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L70">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L72">        String uid = getUidFromAuthorization(authHeader);</span>
+        try {
+<span class="fc" id="L74">            List&lt;RecurringExpense&gt; recurringExpenses = recurringExpenseService.getRecurringExpenses(uid);</span>
+<span class="fc" id="L75">            return ResponseEntity.ok(recurringExpenses);</span>
+<span class="fc" id="L76">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L77">            e.printStackTrace();</span>
+<span class="fc" id="L78">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();</span>
+        }
+    }
+
+    // Update an existing recurring expense
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; updateRecurringExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id,
+            @RequestBody RecurringExpense recurringExpense) {
+<span class="pc bpc" id="L88" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L89">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L91">        String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L92">        recurringExpense.setUserId(uid);</span>
+        try {
+<span class="fc" id="L94">            recurringExpenseService.updateRecurringExpense(id, recurringExpense);</span>
+<span class="fc" id="L95">            return ResponseEntity.ok(&quot;Recurring expense updated successfully.&quot;);</span>
+<span class="fc" id="L96">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L97">            e.printStackTrace();</span>
+<span class="fc" id="L98">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L99">                    .body(&quot;Error updating recurring expense: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // Delete a recurring expense
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; deleteRecurringExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id) {
+<span class="pc bpc" id="L108" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L109">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+        try {
+<span class="fc" id="L112">            recurringExpenseService.deleteRecurringExpense(id);</span>
+<span class="fc" id="L113">            return ResponseEntity.ok(&quot;Recurring expense deleted successfully.&quot;);</span>
+<span class="fc" id="L114">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L115">            e.printStackTrace();</span>
+<span class="fc" id="L116">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L117">                    .body(&quot;Error deleting recurring expense: &quot; + e.getMessage());</span>
+        }
+    }
+    @PostMapping(&quot;/sync&quot;)
+    public ResponseEntity&lt;String&gt; syncRecurringExpenses(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader) {
+<span class="pc bpc" id="L123" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L124">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L126">        String uid = getUidFromAuthorization(authHeader);</span>
+        try {
+            // This method should handle the logic of checking recurring expenses and creating
+            // corresponding expense records if they're due.
+<span class="fc" id="L130">            recurringExpenseService.syncRecurringExpenses(uid);</span>
+<span class="fc" id="L131">            return ResponseEntity.ok(&quot;Recurring expenses synced successfully.&quot;);</span>
+<span class="fc" id="L132">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L133">            e.printStackTrace();</span>
+<span class="fc" id="L134">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L135">                    .body(&quot;Error syncing recurring expenses: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/delete-all&quot;)
+    public ResponseEntity&lt;String&gt; deleteAllRecurringExpenses(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L141">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L142">            String response = recurringExpenseService.deleteAllRecurringExpenses(uid);</span>
+<span class="fc" id="L143">            return ResponseEntity.ok(response);</span>
+<span class="fc" id="L144">        } catch (Exception e) {</span>
+<span class="fc" id="L145">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L146">                    .body(&quot;Error deleting recurring expenses: &quot; + e.getMessage());</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

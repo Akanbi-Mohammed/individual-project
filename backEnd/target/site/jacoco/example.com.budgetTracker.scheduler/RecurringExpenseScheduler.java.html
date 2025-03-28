@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecurringExpenseScheduler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.scheduler</a> &gt; <span class="el_source">RecurringExpenseScheduler.java</span></div><h1>RecurringExpenseScheduler.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.scheduler;
+
+import example.com.budgetTracker.service.RecurringExpenseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@Service
+public class RecurringExpenseScheduler {
+<span class="nc" id="L12">    private static final Logger logger = LoggerFactory.getLogger(RecurringExpenseScheduler.class);</span>
+
+    private final RecurringExpenseService recurringExpenseService;
+
+    @Autowired
+<span class="nc" id="L17">    public RecurringExpenseScheduler(RecurringExpenseService recurringExpenseService) {</span>
+<span class="nc" id="L18">        this.recurringExpenseService = recurringExpenseService;</span>
+<span class="nc" id="L19">    }</span>
+
+    // Schedule to run daily at midnight (server's local time)
+    @Scheduled(cron = &quot;0 0 0 * * ?&quot;)
+    public void scheduledSyncRecurringExpenses() {
+        try {
+<span class="nc" id="L25">            recurringExpenseService.syncAllRecurringExpenses();</span>
+<span class="nc" id="L26">            logger.info(&quot;Scheduled recurring expenses sync completed successfully.&quot;);</span>
+<span class="nc" id="L27">        } catch (Exception e) {</span>
+<span class="nc" id="L28">            logger.error(&quot;Error during scheduled recurring expenses sync: &quot;, e);</span>
+<span class="nc" id="L29">        }</span>
+<span class="nc" id="L30">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

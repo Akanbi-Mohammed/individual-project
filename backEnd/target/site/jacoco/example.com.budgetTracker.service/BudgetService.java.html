@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BudgetService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.service</a> &gt; <span class="el_source">BudgetService.java</span></div><h1>BudgetService.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.service;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import example.com.budgetTracker.model.Budget;
+import example.com.budgetTracker.model.Expense;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+@Service
+public class BudgetService {
+
+    private final Firestore firestore;
+
+    @Autowired
+<span class="fc" id="L20">    public BudgetService(Firestore firestore) {</span>
+<span class="fc" id="L21">        this.firestore = firestore;</span>
+<span class="fc" id="L22">    }</span>
+
+    /**
+     * Adds a new budget document to Firestore.
+     * The Budget object must have the userId set.
+     *
+     * @param budget The Budget object to add.
+     * @return The update time of the write operation as a String.
+     */
+    public String addBudget(Budget budget) throws ExecutionException, InterruptedException {
+<span class="pc bpc" id="L32" title="2 of 4 branches missed.">        if (budget.getUserId() == null || budget.getUserId().isEmpty()) {</span>
+<span class="nc" id="L33">            throw new IllegalArgumentException(&quot;Budget must have a userId.&quot;);</span>
+        }
+<span class="fc" id="L35">        CollectionReference budgetsCollection = firestore.collection(&quot;budgets&quot;);</span>
+<span class="fc" id="L36">        DocumentReference documentReference = budgetsCollection.document();</span>
+        // Set the generated ID as the budget's ID
+<span class="fc" id="L38">        budget.setId(documentReference.getId());</span>
+<span class="fc" id="L39">        WriteResult result = documentReference.set(budget).get();</span>
+<span class="pc bpc" id="L40" title="3 of 4 branches missed.">        String updateTime = (result != null &amp;&amp; result.getUpdateTime() != null)</span>
+<span class="nc" id="L41">                ? result.getUpdateTime().toString()</span>
+<span class="fc" id="L42">                : &quot;unknown&quot;;</span>
+
+<span class="fc" id="L44">        System.out.println(&quot;Budget added with ID: &quot; + budget.getId() + &quot; at time: &quot; + updateTime);</span>
+<span class="fc" id="L45">        return updateTime;</span>
+    }
+
+    /**
+     * Retrieves all budget documents from Firestore for the specified user.
+     *
+     * @param uid The authenticated user's UID.
+     * @return A List of Budget objects that belong to the user.
+     */
+    public List&lt;Budget&gt; getAllBudgets(String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L55">        CollectionReference budgetsCollection = firestore.collection(&quot;budgets&quot;);</span>
+        // Query only documents where userId equals the given uid
+<span class="fc" id="L57">        Query query = budgetsCollection.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L58">        ApiFuture&lt;QuerySnapshot&gt; future = query.get();</span>
+<span class="fc" id="L59">        List&lt;QueryDocumentSnapshot&gt; documents = future.get().getDocuments();</span>
+<span class="fc" id="L60">        List&lt;Budget&gt; budgets = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : documents) {</span>
+<span class="fc" id="L62">            Budget budget = doc.toObject(Budget.class);</span>
+<span class="fc" id="L63">            budget.setId(doc.getId());</span>
+<span class="fc" id="L64">            budgets.add(budget);</span>
+<span class="fc" id="L65">        }</span>
+<span class="fc" id="L66">        System.out.println(&quot;Retrieved &quot; + budgets.size() + &quot; budgets for user: &quot; + uid);</span>
+<span class="fc" id="L67">        return budgets;</span>
+    }
+
+    /**
+     * Saves or updates a budget document in Firestore.
+     * The Budget object must have the userId set.
+     *
+     * @param budget The Budget object to save.
+     * @return The saved Budget object.
+     */
+    public Budget saveBudget(Budget budget) throws ExecutionException, InterruptedException {
+<span class="pc bpc" id="L78" title="2 of 4 branches missed.">        if (budget.getUserId() == null || budget.getUserId().isEmpty()) {</span>
+<span class="nc" id="L79">            throw new IllegalArgumentException(&quot;Budget must have a userId.&quot;);</span>
+        }
+<span class="fc" id="L81">        CollectionReference budgetsCollection = firestore.collection(&quot;budgets&quot;);</span>
+<span class="pc bpc" id="L82" title="1 of 4 branches missed.">        if (budget.getId() != null &amp;&amp; !budget.getId().isEmpty()) {</span>
+            // Update existing budget
+<span class="fc" id="L84">            DocumentReference documentReference = budgetsCollection.document(budget.getId());</span>
+            // Ensure that the document belongs to the same user (optional extra check)
+<span class="fc" id="L86">            Budget existing = documentReference.get().get().toObject(Budget.class);</span>
+<span class="pc bpc" id="L87" title="2 of 4 branches missed.">            if (existing != null &amp;&amp; !budget.getUserId().equals(existing.getUserId())) {</span>
+<span class="nc" id="L88">                throw new RuntimeException(&quot;Unauthorized: Budget does not belong to the user&quot;);</span>
+            }
+<span class="fc" id="L90">            documentReference.set(budget).get();</span>
+<span class="fc" id="L91">            System.out.println(&quot;Updated budget with ID: &quot; + budget.getId());</span>
+<span class="fc" id="L92">        } else {</span>
+            // Create new budget
+<span class="fc" id="L94">            ApiFuture&lt;DocumentReference&gt; addedDocRef = budgetsCollection.add(budget);</span>
+<span class="fc" id="L95">            DocumentReference docRef = addedDocRef.get();</span>
+<span class="fc" id="L96">            budget.setId(docRef.getId());</span>
+<span class="fc" id="L97">            System.out.println(&quot;Created new budget with ID: &quot; + budget.getId());</span>
+        }
+<span class="fc" id="L99">        return budget;</span>
+    }
+
+    /**
+     * Deletes a budget document from Firestore by its ID,
+     * ensuring it belongs to the specified user.
+     *
+     * @param id  The ID of the budget to delete.
+     * @param uid The authenticated user's UID.
+     */
+    public void deleteBudget(String id, String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L110">        DocumentReference documentReference = firestore.collection(&quot;budgets&quot;).document(id);</span>
+<span class="fc" id="L111">        DocumentSnapshot document = documentReference.get().get();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (document.exists()) {</span>
+<span class="fc" id="L113">            Budget budget = document.toObject(Budget.class);</span>
+<span class="pc bpc" id="L114" title="2 of 4 branches missed.">            if (budget == null || !budget.getUserId().equals(uid)) {</span>
+<span class="fc" id="L115">                throw new RuntimeException(&quot;Unauthorized: Budget does not belong to the user&quot;);</span>
+            }
+<span class="nc" id="L117">        } else {</span>
+<span class="fc" id="L118">            throw new RuntimeException(&quot;Budget with ID &quot; + id + &quot; not found.&quot;);</span>
+        }
+<span class="nc" id="L120">        ApiFuture&lt;WriteResult&gt; deleteFuture = documentReference.delete();</span>
+<span class="nc" id="L121">        WriteResult result = deleteFuture.get();</span>
+<span class="nc" id="L122">        System.out.println(&quot;Deleted budget with ID: &quot; + id + &quot; at time: &quot; + result.getUpdateTime());</span>
+<span class="nc" id="L123">    }</span>
+
+    /**
+     * Retrieves a budget document by its ID for the specified user.
+     *
+     * @param id  The ID of the budget.
+     * @param uid The authenticated user's UID.
+     * @return The Budget object if found and if it belongs to the user.
+     */
+    public Budget getBudgetById(String id, String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L133">        DocumentReference documentReference = firestore.collection(&quot;budgets&quot;).document(id);</span>
+<span class="fc" id="L134">        DocumentSnapshot document = documentReference.get().get();</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (document.exists()) {</span>
+<span class="fc" id="L136">            Budget budget = document.toObject(Budget.class);</span>
+<span class="pc bpc" id="L137" title="2 of 4 branches missed.">            if (budget == null || !budget.getUserId().equals(uid)) {</span>
+<span class="nc" id="L138">                throw new RuntimeException(&quot;Unauthorized: Budget does not belong to the user&quot;);</span>
+            }
+<span class="fc" id="L140">            budget.setId(document.getId());</span>
+<span class="fc" id="L141">            System.out.println(&quot;Found budget with ID: &quot; + budget.getId() + &quot; for user: &quot; + uid);</span>
+<span class="fc" id="L142">            return budget;</span>
+        } else {
+<span class="nc" id="L144">            throw new RuntimeException(&quot;Budget with ID &quot; + id + &quot; not found.&quot;);</span>
+        }
+    }
+    public void batchUpdateCategory(String uid, String oldCategory, String newCategory)
+            throws ExecutionException, InterruptedException {
+        // Normalise category names
+<span class="fc" id="L150">        String normalizedOld = oldCategory.trim().toLowerCase();</span>
+<span class="fc" id="L151">        String normalizedNew = newCategory.trim().toLowerCase();</span>
+
+<span class="fc" id="L153">        WriteBatch batch = firestore.batch();</span>
+
+        // Update budgets collection
+<span class="fc" id="L156">        CollectionReference budgetsRef = firestore.collection(&quot;budgets&quot;);</span>
+<span class="fc" id="L157">        Query budgetsQuery = budgetsRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L158">        List&lt;QueryDocumentSnapshot&gt; budgetDocs = budgetsQuery.get().get().getDocuments();</span>
+
+<span class="fc bfc" id="L160" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : budgetDocs) {</span>
+<span class="fc" id="L161">            Budget budget = doc.toObject(Budget.class);</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">            if (budget.getCategory().trim().toLowerCase().equals(normalizedOld)) {</span>
+<span class="fc" id="L163">                batch.update(doc.getReference(), &quot;category&quot;, newCategory);</span>
+            }
+<span class="fc" id="L165">        }</span>
+
+        // Update expenses collection
+<span class="fc" id="L168">        CollectionReference expensesRef = firestore.collection(&quot;expenses&quot;);</span>
+<span class="fc" id="L169">        Query expensesQuery = expensesRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L170">        List&lt;QueryDocumentSnapshot&gt; expenseDocs = expensesQuery.get().get().getDocuments();</span>
+
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : expenseDocs) {</span>
+<span class="fc" id="L173">            Expense expense = doc.toObject(Expense.class);</span>
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">            if (expense.getCategory().trim().toLowerCase().equals(normalizedOld)) {</span>
+<span class="fc" id="L175">                batch.update(doc.getReference(), &quot;category&quot;, newCategory);</span>
+            }
+<span class="fc" id="L177">        }</span>
+
+        // Commit batch update
+<span class="fc" id="L180">        ApiFuture&lt;List&lt;WriteResult&gt;&gt; future = batch.commit();</span>
+<span class="fc" id="L181">        future.get();</span>
+<span class="fc" id="L182">    }</span>
+
+    public void deleteBudgetsByCategory(String uid, String category) throws ExecutionException, InterruptedException {
+<span class="fc" id="L185">        CollectionReference budgetsRef = firestore.collection(&quot;budgets&quot;);</span>
+<span class="fc" id="L186">        Query query = budgetsRef.whereEqualTo(&quot;userId&quot;, uid).whereEqualTo(&quot;category&quot;, category);</span>
+<span class="fc" id="L187">        List&lt;QueryDocumentSnapshot&gt; docs = query.get().get().getDocuments();</span>
+<span class="fc" id="L188">        WriteBatch batch = firestore.batch();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : docs) {</span>
+<span class="fc" id="L190">            batch.delete(doc.getReference());</span>
+<span class="fc" id="L191">        }</span>
+<span class="fc" id="L192">        ApiFuture&lt;List&lt;WriteResult&gt;&gt; future = batch.commit();</span>
+<span class="fc" id="L193">        future.get();</span>
+<span class="fc" id="L194">    }</span>
+    public String deleteAllBudgets(String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L196">        CollectionReference budgetsCollection = firestore.collection(&quot;budgets&quot;);</span>
+<span class="fc" id="L197">        Query query = budgetsCollection.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L198">        ApiFuture&lt;QuerySnapshot&gt; future = query.get();</span>
+<span class="fc" id="L199">        List&lt;QueryDocumentSnapshot&gt; documents = future.get().getDocuments();</span>
+
+<span class="fc bfc" id="L201" title="All 2 branches covered.">        if (documents.isEmpty()) {</span>
+<span class="fc" id="L202">            throw new RuntimeException(&quot;No budgets found for user: &quot; + uid);</span>
+        }
+
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        for (QueryDocumentSnapshot document : documents) {</span>
+<span class="fc" id="L206">            document.getReference().delete();</span>
+<span class="fc" id="L207">        }</span>
+
+<span class="fc" id="L209">        return &quot;All budgets deleted successfully.&quot;;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

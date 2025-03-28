@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Budget.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.model</a> &gt; <span class="el_source">Budget.java</span></div><h1>Budget.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.model;
+
+import com.google.cloud.firestore.annotation.DocumentId;
+
+public class Budget {
+
+    @DocumentId
+    private String id;
+
+    // This field will store the authenticated user's UID.
+    private String userId;
+
+    private String category;
+    private double amount;
+    private String month; // Format: &quot;YYYY-MM&quot;
+
+    // Default constructor (required for Firestore deserialization)
+<span class="fc" id="L18">    public Budget() {</span>
+<span class="fc" id="L19">    }</span>
+
+    // Convenience constructor
+<span class="fc" id="L22">    public Budget(String userId, String category, double amount, String month) {</span>
+<span class="fc" id="L23">        this.userId = userId;</span>
+<span class="fc" id="L24">        this.category = category;</span>
+<span class="fc" id="L25">        this.amount = amount;</span>
+<span class="fc" id="L26">        this.month = month;</span>
+<span class="fc" id="L27">    }</span>
+
+    // Getters and Setters
+    public String getId() {
+<span class="fc" id="L31">        return id;</span>
+    }
+    public void setId(String id) {
+<span class="fc" id="L34">        this.id = id;</span>
+<span class="fc" id="L35">    }</span>
+    public String getUserId() {
+<span class="fc" id="L37">        return userId;</span>
+    }
+    public void setUserId(String userId) {
+<span class="fc" id="L40">        this.userId = userId;</span>
+<span class="fc" id="L41">    }</span>
+    public String getCategory() {
+<span class="fc" id="L43">        return category;</span>
+    }
+    public void setCategory(String category) {
+<span class="fc" id="L46">        this.category = category;</span>
+<span class="fc" id="L47">    }</span>
+    public double getAmount() {
+<span class="fc" id="L49">        return amount;</span>
+    }
+    public void setAmount(double amount) {
+<span class="fc" id="L52">        this.amount = amount;</span>
+<span class="fc" id="L53">    }</span>
+    public String getMonth() {
+<span class="fc" id="L55">        return month;</span>
+    }
+    public void setMonth(String month) {
+<span class="fc" id="L58">        this.month = month;</span>
+<span class="fc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

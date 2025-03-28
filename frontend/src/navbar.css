@@ -1,29 +1,76 @@
-/* Navbar styling */
+/*******************************************
+  NAVBAR CONTAINER
+********************************************/
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
     background-color: #4e4e4e;
     color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 0.8rem 1.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1002; /* above overlay */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.navbar-logo span {
+/*******************************************
+  LOGO
+********************************************/
+.navbar-logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #fff;
 }
 
+/*******************************************
+  HAMBURGER BUTTON
+********************************************/
+.menu-icon {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: none; /* hidden on large screens */
+}
+
+/*******************************************
+  OVERLAY (DIM BACKGROUND)
+********************************************/
+.overlay {
+    display: none;
+}
+
+.overlay.show {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000; /* behind the navbar-links but above page content */
+}
+
+/*******************************************
+  NAVBAR LINKS (DESKTOP)
+********************************************/
 .navbar-links {
     display: flex;
     gap: 1.5rem;
+    align-items: center;
+    transition: transform 0.3s ease;
 }
 
+/* Default link styling */
 .navbar-links a {
     color: #fff;
     text-decoration: none;
     font-size: 1rem;
+    display: flex;
+    align-items: center;
     transition: color 0.3s;
 }
 
@@ -31,20 +78,82 @@
     color: #ddd;
 }
 
+/* Icon inside each link */
+.icon {
+    margin-right: 0.5rem;
+}
+
+/*******************************************
+  SIDE DRAWER STYLES (MOBILE)
+********************************************/
 @media (max-width: 768px) {
-    .navbar {
+    /* Show hamburger button on small screens */
+    .menu-icon {
+        display: block;
+    }
+
+    /* Hide the navbar links in a side drawer off-screen */
+    .navbar-links {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 70%;              /* narrower than full screen */
+        max-width: 300px;        /* optional max width */
+        background: linear-gradient(135deg, #4e4e4e, #2f2f2f);
+        box-shadow: -4px 0 8px rgba(0, 0, 0, 0.3);
         flex-direction: column;
         align-items: flex-start;
+        padding: 2rem 1rem;
+        transform: translateX(100%);
+        z-index: 1001;
+        border-radius: 0 0 0 0;  /* or add rounding: 10px 0 0 10px; */
     }
 
-    .navbar-links {
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        padding-top: 1rem;
+    /* Slide drawer into view when .show is added */
+    .navbar-links.show {
+        transform: translateX(0);
     }
 
+    /* Each link takes full width, bigger text */
     .navbar-links a {
         font-size: 1.1rem;
+        padding: 0.75rem 0;
+        width: 100%;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+}
+
+/*******************************************
+  CLOSE BUTTON INSIDE DRAWER
+********************************************/
+.close-btn {
+    display: none;
+}
+@media (max-width: 768px) {
+    /* Reduce navbar side padding on mobile */
+    .navbar {
+        flex-wrap: nowrap;
+        padding: 0.8rem 0.5rem; /* reduce left/right padding */
+        position: fixed;
+        left: 0;
+        right: 0;
+    }
+
+    /* Ensure the logo doesn’t wrap */
+    .navbar-logo {
+        white-space: nowrap;
+        /* Optionally adjust font-size if needed */
+        /* font-size: 1.3rem; */
+    }
+
+    /* Position the hamburger icon absolutely at the far right */
+    .menu-icon {
+        position: absolute;
+        top: 50%;
+        right: -2.5rem;
+        transform: translateY(-50%);
+        margin: 0;
+        display: block;
     }
 }

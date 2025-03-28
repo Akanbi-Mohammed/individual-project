@@ -1,4 +1,4 @@
-/* Container for the goals page */
+/* Goals Page Container */
 .goals-page {
     padding: 20px;
     max-width: 800px;
@@ -15,8 +15,16 @@
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.goal-form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Form labels & descriptions */
 .field-label {
     font-size: 16px;
     font-weight: bold;
@@ -37,13 +45,13 @@
     flex-direction: column;
 }
 
-
 /* Intro text styling */
 .intro-title {
     margin-top: 60px;
     text-align: center;
     font-size: 1.8em;
     font-weight: bold;
+    color: #333;
 }
 
 .intro-text {
@@ -63,33 +71,124 @@
     font-size: 1em;
 }
 
-/* Buttons */
+/* Unified Primary Button Styling (changed to black/grey) */
 .form-button, .filter-toggle-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #333;
-    color: white;
+    background-color: #333333;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 10px;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
 .form-button:hover, .filter-toggle-button:hover {
-    background-color: #555;
+    background-color: #007acc;
 }
 
-/* Date filter layout */
+/* Cancel Button Styling */
+.form-button-cancel {
+    background-color: #757474;
+    color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.form-button-cancel:hover {
+    background-color: #aaa9a9;
+}
+
+/* Main container */
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #ffff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1300px;
+    margin: auto;
+    transition: 0.3s ease-in-out;
+}
+
+/* Search input */
+.search-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Button */
+.toggle-button {
+    padding: 12px;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.toggle-button:hover {
+    background: linear-gradient(45deg, #0056b3, #003d80);
+}
+
+/* Date filter container */
 .date-filter {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 10px;
 }
 
+/* Date input */
 .date-input {
     flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.date-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.goal-card:hover .progress-bar-fill {
+    animation: pulse-progress 0.5s ease-in-out;
+}
+@keyframes pulse-progress {
+    0% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.8;
+    }
 }
 
 /* Section titles */
@@ -98,6 +197,7 @@
     margin-top: 20px;
     margin-bottom: 10px;
     text-align: center;
+    color: #333;
 }
 
 /* Goal card styling */
@@ -110,16 +210,19 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .goal-card:hover {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Goal card content */
 .goal-card-content {
-    flex-grow: 1;
-    color: #333;
+    text-align: left;
+    margin: 5px 0;
+    flex: 2; /* Allows content to take up remaining space */
+    font-size: 1.1em;
 }
 
 .goal-card p {
@@ -130,9 +233,10 @@
 .goal-buttons {
     display: flex;
     gap: 10px;
+    align-self: flex-end;
 }
 
-/* General button styling */
+/* Unified Goal Button Styling */
 .goal-button {
     padding: 8px 16px;
     font-size: 14px;
@@ -142,24 +246,31 @@
     transition: background-color 0.3s ease;
 }
 
-/* Edit button styling */
+/* Edit button (Primary Action) */
 .goal-edit-button {
-    background-color: #d3d3d3;
-    color: #333;
+    background-color: #333333;
+    color: #fff;
 }
+.goal-edit-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    gap: 15px; /* Reduce space between fields */
+    padding: 15px; /* Reduce excessive padding */
+}
+
 
 .goal-edit-button:hover {
-    background-color: #c0c0c0;
+    background-color: #124ddd;
 }
 
-/* Delete button styling */
+/* Delete button (Destructive Action) remains red */
 .goal-delete-button {
-    background-color: #333;
+    background-color: #101212;
     color: #fff;
 }
 
 .goal-delete-button:hover {
-    background-color: #555;
+    background-color: #c82333;
 }
 
 /* No goals message styling */
@@ -169,7 +280,7 @@
     text-align: center;
 }
 
-/* Progress Bar */
+/* Progress bar styling */
 .progress-bar-container {
     width: 100%;
     background-color: #e0e0e0;
@@ -181,34 +292,126 @@
 
 .progress-bar-fill {
     height: 100%;
-    background-color: #007bff; /* Blue color */
+    background-color: #333333;
     width: 0%;
     transition: width 0.3s ease-in-out;
 }
 
-/* Error message styling */
-.error-text {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-/* Goals list styling */
-.goals-list {
+/* Popup (Modal) styling */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
-    flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
 
-/* Refinements for form fields and goals display */
-.form-input, .filter-input, .date-input, .form-button {
-    font-size: 1em; /* Consistent font size */
+.popup-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    max-width: 90%;
 }
 
-.goal-card-content {
-    font-size: 1.1em; /* Slightly larger text for goal details */
+.popup-container h2 {
+    color: #101212;
+    font-size: 22px;
 }
 
-.goal-buttons {
-    align-self: flex-end;
+.popup-container p {
+    font-size: 18px;
+    color: #333;
+}
+
+.popup-button {
+    background: #333333;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 15px;
+    width: 100%;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.popup-button:hover {
+    background: #444444;
+}
+
+/* Responsive Design */
+
+/* Mobile Devices (max-width: 600px) */
+@media (max-width: 600px) {
+    .goals-page {
+        padding: 10px;
+        max-width: 100%;
+    }
+    .goal-form {
+        padding: 20px;
+    }
+    .intro-title {
+        font-size: 1.6em;
+    }
+    .intro-text {
+        font-size: 1em;
+    }
+    .goal-card {
+        padding: 10px;
+    }
+    .goal-card-content {
+        font-size: 1em;
+    }
+    .goal-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    .popup-container {
+        padding: 15px;
+        max-width: 90%;
+    }
+}
+
+/* Tablets (min-width: 601px and max-width: 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .goals-page {
+        max-width: 95%;
+        padding: 15px;
+    }
+    .goal-form {
+        padding: 25px;
+    }
+    .intro-title {
+        font-size: 1.8em;
+    }
+    .intro-text {
+        font-size: 1.1em;
+    }
+    .goal-card {
+        padding: 12px;
+    }
+    .goal-card-content {
+        font-size: 1.05em;
+    }
+    .goal-button {
+        padding: 7px 14px;
+        font-size: 13px;
+    }
+}
+
+/* Desktop (min-width: 1024px) */
+@media (min-width: 1024px) {
+    .goals-page {
+        max-width: 900px;
+    }
 }

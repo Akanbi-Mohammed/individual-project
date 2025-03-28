@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.service</a> &gt; <span class="el_source">ExpenseService.java</span></div><h1>ExpenseService.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.service;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import example.com.budgetTracker.model.Expense;
+import example.com.budgetTracker.model.RecurringExpense;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
+
+@Service
+public class ExpenseService {
+
+    @Autowired
+    private Firestore firestore;
+
+<span class="fc" id="L23">    public ExpenseService(Firestore firestore) {</span>
+<span class="fc" id="L24">        this.firestore = firestore;</span>
+<span class="fc" id="L25">    }</span>
+
+    public String addExpense(Expense expense) throws InterruptedException, ExecutionException {
+<span class="fc" id="L28">        long id = (System.currentTimeMillis() / 1000) + ThreadLocalRandom.current().nextInt(1, 1000);</span>
+<span class="fc" id="L29">        expense.setId(id);</span>
+<span class="fc" id="L30">        System.out.println(&quot;Adding expense with generated id: &quot; + id);</span>
+
+<span class="fc" id="L32">        DocumentReference documentReference = firestore.collection(&quot;expenses&quot;)</span>
+<span class="fc" id="L33">                .document(String.valueOf(id));</span>
+
+<span class="fc" id="L35">        ApiFuture&lt;WriteResult&gt; writeResult = documentReference.set(expense);</span>
+<span class="fc" id="L36">        WriteResult result = writeResult.get();</span>
+
+<span class="pc bpc" id="L38" title="3 of 4 branches missed.">        String updateTime = (result != null &amp;&amp; result.getUpdateTime() != null)</span>
+<span class="nc" id="L39">                ? result.getUpdateTime().toString()</span>
+<span class="fc" id="L40">                : &quot;unknown&quot;;</span>
+
+<span class="fc" id="L42">        System.out.println(&quot;Expense updated at: &quot; + updateTime);</span>
+<span class="fc" id="L43">        return &quot;Expense updated successfully at: &quot; + updateTime;</span>
+    }
+
+    public Expense getExpense(String expenseId, String uid) throws InterruptedException, ExecutionException {
+<span class="fc" id="L47">        System.out.println(&quot;Fetching expense with id: &quot; + expenseId + &quot; for uid: &quot; + uid);</span>
+<span class="fc" id="L48">        DocumentReference documentReference = firestore.collection(&quot;expenses&quot;).document(expenseId);</span>
+<span class="fc" id="L49">        ApiFuture&lt;DocumentSnapshot&gt; future = documentReference.get();</span>
+<span class="fc" id="L50">        DocumentSnapshot document = future.get();</span>
+
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (document.exists()) {</span>
+<span class="fc" id="L53">            Expense expense = document.toObject(Expense.class);</span>
+<span class="pc bpc" id="L54" title="3 of 6 branches missed.">            if (expense != null &amp;&amp; expense.getUserId() != null &amp;&amp; expense.getUserId().equals(uid)) {</span>
+<span class="fc" id="L55">                System.out.println(&quot;Expense found and authorized.&quot;);</span>
+<span class="fc" id="L56">                return expense;</span>
+            } else {
+<span class="nc" id="L58">                throw new RuntimeException(&quot;Unauthorized: Expense does not belong to the user&quot;);</span>
+            }
+        } else {
+<span class="nc" id="L61">            throw new RuntimeException(&quot;Expense not found&quot;);</span>
+        }
+    }
+
+    public String updateExpense(String expenseId, Expense expense, String uid) throws InterruptedException, ExecutionException {
+<span class="fc" id="L66">        System.out.println(&quot;Updating expense with id: &quot; + expenseId + &quot; for uid: &quot; + uid);</span>
+<span class="fc" id="L67">        DocumentReference documentReference = firestore.collection(&quot;expenses&quot;).document(expenseId);</span>
+<span class="fc" id="L68">        ApiFuture&lt;DocumentSnapshot&gt; future = documentReference.get();</span>
+<span class="fc" id="L69">        DocumentSnapshot document = future.get();</span>
+
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (document.exists()) {</span>
+<span class="fc" id="L72">            Expense existingExpense = document.toObject(Expense.class);</span>
+<span class="pc bpc" id="L73" title="3 of 6 branches missed.">            if (existingExpense != null &amp;&amp; existingExpense.getUserId() != null &amp;&amp; existingExpense.getUserId().equals(uid)) {</span>
+<span class="fc" id="L74">                expense.setId(existingExpense.getId());</span>
+<span class="fc" id="L75">                expense.setUserId(uid);</span>
+<span class="fc" id="L76">                ApiFuture&lt;WriteResult&gt; writeResult = documentReference.set(expense);</span>
+<span class="fc" id="L77">                WriteResult result = writeResult.get();</span>
+
+<span class="pc bpc" id="L79" title="3 of 4 branches missed.">                String updateTime = (result != null &amp;&amp; result.getUpdateTime() != null)</span>
+<span class="nc" id="L80">                        ? result.getUpdateTime().toString()</span>
+<span class="fc" id="L81">                        : &quot;unknown&quot;;</span>
+
+<span class="fc" id="L83">                System.out.println(&quot;Expense updated at: &quot; + updateTime);</span>
+<span class="fc" id="L84">                return &quot;Expense updated successfully at: &quot; + updateTime;</span>
+
+            } else {
+<span class="nc" id="L87">                throw new RuntimeException(&quot;Unauthorized: Expense does not belong to the user&quot;);</span>
+            }
+        } else {
+<span class="nc" id="L90">            throw new RuntimeException(&quot;Expense not found&quot;);</span>
+        }
+    }
+
+    public void deleteExpense(String expenseId, String uid) throws InterruptedException, ExecutionException {
+<span class="fc" id="L95">        System.out.println(&quot;Deleting expense with id: &quot; + expenseId + &quot; for uid: &quot; + uid);</span>
+<span class="fc" id="L96">        DocumentReference documentReference = firestore.collection(&quot;expenses&quot;).document(expenseId);</span>
+<span class="fc" id="L97">        ApiFuture&lt;DocumentSnapshot&gt; future = documentReference.get();</span>
+<span class="fc" id="L98">        DocumentSnapshot document = future.get();</span>
+
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (document.exists()) {</span>
+<span class="fc" id="L101">            Expense existingExpense = document.toObject(Expense.class);</span>
+<span class="pc bpc" id="L102" title="3 of 6 branches missed.">            if (existingExpense != null &amp;&amp; existingExpense.getUserId() != null &amp;&amp; existingExpense.getUserId().equals(uid)) {</span>
+<span class="fc" id="L103">                ApiFuture&lt;WriteResult&gt; writeResult = documentReference.delete();</span>
+<span class="fc" id="L104">                writeResult.get();</span>
+<span class="fc" id="L105">                System.out.println(&quot;Expense deleted successfully.&quot;);</span>
+<span class="fc" id="L106">            } else {</span>
+<span class="nc" id="L107">                throw new RuntimeException(&quot;Unauthorized: Expense does not belong to the user&quot;);</span>
+            }
+<span class="fc" id="L109">        } else {</span>
+<span class="nc" id="L110">            throw new RuntimeException(&quot;Expense not found&quot;);</span>
+        }
+<span class="fc" id="L112">    }</span>
+
+    public List&lt;Expense&gt; getAllExpenses(String uid) {
+<span class="nc" id="L115">        System.out.println(&quot;Fetching all expenses for uid: &quot; + uid);</span>
+<span class="nc" id="L116">        List&lt;Expense&gt; expenses = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L117">        CollectionReference expensesRef = firestore.collection(&quot;expenses&quot;);</span>
+
+        try {
+<span class="nc" id="L120">            Query query = expensesRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="nc" id="L121">            QuerySnapshot querySnapshot = query.get().get();</span>
+<span class="nc" id="L122">            System.out.println(&quot;Number of expenses found: &quot; + querySnapshot.size());</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            for (QueryDocumentSnapshot document : querySnapshot.getDocuments()) {</span>
+<span class="nc" id="L124">                Expense expense = document.toObject(Expense.class);</span>
+<span class="nc" id="L125">                expenses.add(expense);</span>
+<span class="nc" id="L126">            }</span>
+<span class="nc" id="L127">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L128">            System.err.println(&quot;Error fetching expenses: &quot; + e.getMessage());</span>
+<span class="nc" id="L129">            e.printStackTrace();</span>
+<span class="nc" id="L130">        }</span>
+<span class="nc" id="L131">        return expenses;</span>
+    }
+
+    public void deleteExpensesByCategory(String uid, String category) throws ExecutionException, InterruptedException {
+<span class="fc" id="L135">        CollectionReference expensesRef = firestore.collection(&quot;expenses&quot;);</span>
+<span class="fc" id="L136">        Query query = expensesRef.whereEqualTo(&quot;userId&quot;, uid).whereEqualTo(&quot;category&quot;, category);</span>
+<span class="fc" id="L137">        List&lt;QueryDocumentSnapshot&gt; docs = query.get().get().getDocuments();</span>
+<span class="fc" id="L138">        WriteBatch batch = firestore.batch();</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : docs) {</span>
+<span class="fc" id="L140">            batch.delete(doc.getReference());</span>
+<span class="fc" id="L141">        }</span>
+<span class="fc" id="L142">        ApiFuture&lt;List&lt;WriteResult&gt;&gt; future = batch.commit();</span>
+<span class="fc" id="L143">        future.get();</span>
+<span class="fc" id="L144">    }</span>
+
+    public boolean existsRecurringExpense(String uid, String recurringExpenseId, String periodIdentifier) throws ExecutionException, InterruptedException {
+<span class="fc" id="L147">        CollectionReference expensesRef = firestore.collection(&quot;expenses&quot;);</span>
+<span class="fc" id="L148">        Query query = expensesRef.whereEqualTo(&quot;userId&quot;, uid)</span>
+<span class="fc" id="L149">                .whereEqualTo(&quot;recurringExpenseId&quot;, recurringExpenseId)</span>
+<span class="fc" id="L150">                .whereEqualTo(&quot;periodIdentifier&quot;, periodIdentifier);</span>
+<span class="fc" id="L151">        QuerySnapshot snapshot = query.get().get();</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        return !snapshot.isEmpty();</span>
+    }
+
+    public void createExpenseFromRecurring(String uid, RecurringExpense rec, String periodIdentifier)
+            throws ExecutionException, InterruptedException {
+<span class="fc" id="L157">        Expense expense = new Expense();</span>
+<span class="fc" id="L158">        long id = (System.currentTimeMillis() / 1000) + ThreadLocalRandom.current().nextInt(1, 1000);</span>
+<span class="fc" id="L159">        expense.setId(id);</span>
+<span class="fc" id="L160">        expense.setUserId(uid);</span>
+<span class="fc" id="L161">        expense.setCategory(rec.getCategory());</span>
+<span class="fc" id="L162">        expense.setAmount(rec.getAmount());</span>
+
+        // Use the recurring expense's billingDay to set the date
+<span class="fc" id="L165">        LocalDate now = LocalDate.now(ZoneId.of(&quot;UTC&quot;));</span>
+<span class="fc" id="L166">        LocalDate dateForExpense = now.withDayOfMonth(rec.getBillingDay());</span>
+<span class="fc" id="L167">        expense.setDate(String.valueOf(java.sql.Date.valueOf(dateForExpense)));</span>
+
+        // The big change: set the normal expense's &quot;description&quot; from the recurring expense's &quot;description&quot;
+<span class="fc" id="L170">        expense.setDescription(rec.getDescription());</span>
+
+        // Mark it as coming from this recurring expense
+<span class="fc" id="L173">        expense.setRecurringExpenseId(rec.getId());</span>
+<span class="fc" id="L174">        expense.setPeriodIdentifier(periodIdentifier);</span>
+
+<span class="fc" id="L176">        DocumentReference documentReference = firestore.collection(&quot;expenses&quot;).document(String.valueOf(id));</span>
+<span class="fc" id="L177">        ApiFuture&lt;WriteResult&gt; writeResult = documentReference.set(expense);</span>
+<span class="fc" id="L178">        WriteResult result = writeResult.get();</span>
+<span class="pc bpc" id="L179" title="3 of 4 branches missed.">        String updateTime = (result != null &amp;&amp; result.getUpdateTime() != null)</span>
+<span class="nc" id="L180">                ? result.getUpdateTime().toString()</span>
+<span class="fc" id="L181">                : &quot;unknown&quot;;</span>
+
+<span class="fc" id="L183">        System.out.println(&quot;Recurring expense added as expense at: &quot; + updateTime);</span>
+<span class="fc" id="L184">    }</span>
+    public String deleteAllExpenses(String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L186">        CollectionReference expensesCollection = firestore.collection(&quot;expenses&quot;);</span>
+<span class="fc" id="L187">        Query query = expensesCollection.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L188">        ApiFuture&lt;QuerySnapshot&gt; future = query.get();</span>
+<span class="fc" id="L189">        List&lt;QueryDocumentSnapshot&gt; documents = future.get().getDocuments();</span>
+
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">        if (documents.isEmpty()) {</span>
+<span class="nc" id="L192">            throw new RuntimeException(&quot;No expenses found for user: &quot; + uid);</span>
+        }
+
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        for (QueryDocumentSnapshot document : documents) {</span>
+<span class="fc" id="L196">            document.getReference().delete();</span>
+<span class="fc" id="L197">        }</span>
+
+<span class="fc" id="L199">        return &quot;All expenses deleted successfully.&quot;;</span>
+    }
+    public void updateCategory(String uid, String oldCategory, String newCategory) throws ExecutionException, InterruptedException {
+<span class="fc" id="L202">        CollectionReference expensesRef = firestore.collection(&quot;expenses&quot;);</span>
+<span class="fc" id="L203">        Query query = expensesRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L204">        List&lt;QueryDocumentSnapshot&gt; docs = query.get().get().getDocuments();</span>
+
+<span class="fc" id="L206">        WriteBatch batch = firestore.batch();</span>
+<span class="fc bfc" id="L207" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : docs) {</span>
+<span class="fc" id="L208">            Expense expense = doc.toObject(Expense.class);</span>
+<span class="pc bpc" id="L209" title="1 of 2 branches missed.">            if (expense.getCategory().trim().toLowerCase().equals(oldCategory.trim().toLowerCase())) {</span>
+<span class="fc" id="L210">                batch.update(doc.getReference(), &quot;category&quot;, newCategory);</span>
+            }
+<span class="fc" id="L212">        }</span>
+
+<span class="fc" id="L214">        ApiFuture&lt;List&lt;WriteResult&gt;&gt; future = batch.commit();</span>
+<span class="fc" id="L215">        future.get();</span>
+<span class="fc" id="L216">    }</span>
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

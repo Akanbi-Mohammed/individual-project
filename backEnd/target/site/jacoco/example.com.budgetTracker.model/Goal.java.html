@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Goal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.model</a> &gt; <span class="el_source">Goal.java</span></div><h1>Goal.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.model;
+
+import com.google.cloud.firestore.annotation.DocumentId;
+
+public class Goal {
+
+    @DocumentId
+    private String id;
+
+    // New field to store the authenticated user's UID.
+    private String userId;
+
+    private String goal;
+    private double targetAmount;
+    private double allocatedFunds;
+    private String deadline;
+
+    // Default constructor (required for Firestore deserialization)
+<span class="fc" id="L19">    public Goal() {</span>
+<span class="fc" id="L20">    }</span>
+
+    // Convenience constructor
+<span class="fc" id="L23">    public Goal(String userId, String goal, double targetAmount, double allocatedFunds, String deadline) {</span>
+<span class="fc" id="L24">        this.userId = userId;</span>
+<span class="fc" id="L25">        this.goal = goal;</span>
+<span class="fc" id="L26">        this.targetAmount = targetAmount;</span>
+<span class="fc" id="L27">        this.allocatedFunds = allocatedFunds;</span>
+<span class="fc" id="L28">        this.deadline = deadline;</span>
+<span class="fc" id="L29">    }</span>
+
+    // Getters and Setters
+    public String getId() {
+<span class="fc" id="L33">        return id;</span>
+    }
+    public void setId(String id) {
+<span class="fc" id="L36">        this.id = id;</span>
+<span class="fc" id="L37">    }</span>
+    public String getUserId() {
+<span class="fc" id="L39">        return userId;</span>
+    }
+    public void setUserId(String userId) {
+<span class="fc" id="L42">        this.userId = userId;</span>
+<span class="fc" id="L43">    }</span>
+    public String getGoal() {
+<span class="fc" id="L45">        return goal;</span>
+    }
+    public void setGoal(String goal) {
+<span class="fc" id="L48">        this.goal = goal;</span>
+<span class="fc" id="L49">    }</span>
+    public double getTargetAmount() {
+<span class="fc" id="L51">        return targetAmount;</span>
+    }
+    public void setTargetAmount(double targetAmount) {
+<span class="fc" id="L54">        this.targetAmount = targetAmount;</span>
+<span class="fc" id="L55">    }</span>
+    public double getAllocatedFunds() {
+<span class="fc" id="L57">        return allocatedFunds;</span>
+    }
+    public void setAllocatedFunds(double allocatedFunds) {
+<span class="fc" id="L60">        this.allocatedFunds = allocatedFunds;</span>
+<span class="fc" id="L61">    }</span>
+    public String getDeadline() {
+<span class="fc" id="L63">        return deadline;</span>
+    }
+    public void setDeadline(String deadline) {
+<span class="fc" id="L66">        this.deadline = deadline;</span>
+<span class="fc" id="L67">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

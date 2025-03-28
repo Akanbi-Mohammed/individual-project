@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.controller</a> &gt; <span class="el_source">CategoryController.java</span></div><h1>CategoryController.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.controller;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import example.com.budgetTracker.model.Category;
+import example.com.budgetTracker.service.BudgetService;
+import example.com.budgetTracker.service.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(&quot;/api/categories&quot;)
+@CrossOrigin(origins = &quot;https://level4-project.web.app&quot;)
+<span class="fc" id="L20">public class CategoryController {</span>
+
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private BudgetService budgetService;
+
+    public String getUidFromAuthorization(String authHeader) {
+<span class="nc" id="L28">        String token = authHeader;</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L30">            token = authHeader.substring(7);</span>
+        }
+        try {
+<span class="nc" id="L33">            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);</span>
+<span class="nc" id="L34">            return decodedToken.getUid();</span>
+<span class="nc" id="L35">        } catch (Exception e) {</span>
+<span class="nc" id="L36">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Invalid token&quot;, e);</span>
+        }
+    }
+
+    // GET /api/categories – returns the user's categories as an array
+    @GetMapping
+    public ResponseEntity&lt;?&gt; getCategories(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader) {
+<span class="pc bpc" id="L44" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L45">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L47">        String uid = getUidFromAuthorization(authHeader);</span>
+        try {
+<span class="fc" id="L49">            return ResponseEntity.ok(categoryService.getCategories(uid));</span>
+<span class="fc" id="L50">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L51">            e.printStackTrace();</span>
+<span class="fc" id="L52">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Error retrieving categories&quot;);</span>
+        }
+    }
+
+    // PUT /api/categories – updates the user's categories with the provided list
+    @PutMapping(&quot;/updateCategory&quot;)
+    public ResponseEntity&lt;String&gt; updateBudgetCategory(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @RequestBody Map&lt;String, String&gt; payload) {
+<span class="pc bpc" id="L61" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L62">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L64">        String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L65">        String oldCategory = payload.get(&quot;oldCategory&quot;);</span>
+<span class="fc" id="L66">        String newCategory = payload.get(&quot;newCategory&quot;);</span>
+<span class="pc bpc" id="L67" title="1 of 4 branches missed.">        if (oldCategory == null || newCategory == null) {</span>
+<span class="fc" id="L68">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Missing category values&quot;);</span>
+        }
+        try {
+<span class="fc" id="L71">            budgetService.batchUpdateCategory(uid, oldCategory, newCategory);</span>
+<span class="fc" id="L72">            return ResponseEntity.ok(&quot;Budget categories updated successfully.&quot;);</span>
+<span class="fc" id="L73">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L74">            e.printStackTrace();</span>
+<span class="fc" id="L75">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L76">                    .body(&quot;Error updating budget categories: &quot; + e.getMessage());</span>
+        }
+    }
+    @PutMapping
+    public ResponseEntity&lt;String&gt; updateUserCategories(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestBody Category categoryRequest
+    ) {
+<span class="pc bpc" id="L84" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L85">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+
+<span class="fc" id="L88">        String uid = getUidFromAuthorization(authHeader);</span>
+
+<span class="pc bpc" id="L90" title="2 of 4 branches missed.">        if (categoryRequest == null || categoryRequest.getCategories() == null) {</span>
+<span class="nc" id="L91">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;Invalid category data&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L95">            categoryService.updateCategories(uid, categoryRequest.getCategories());</span>
+<span class="fc" id="L96">            return ResponseEntity.ok(&quot;Categories updated successfully.&quot;);</span>
+<span class="fc" id="L97">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L98">            e.printStackTrace();</span>
+<span class="fc" id="L99">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L100">                    .body(&quot;Error updating categories: &quot; + e.getMessage());</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/delete-all&quot;)
+    public ResponseEntity&lt;String&gt; deleteAllCategories(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L107">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L108">            String response = categoryService.deleteAllCategories(uid);</span>
+<span class="fc" id="L109">            return ResponseEntity.ok(response);</span>
+<span class="fc" id="L110">        } catch (Exception e) {</span>
+<span class="fc" id="L111">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L112">                    .body(&quot;Error deleting categories: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/byCategory/{category}&quot;)
+    public ResponseEntity&lt;String&gt; deleteCategoryByName(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @PathVariable String category) {
+        try {
+<span class="fc" id="L120">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L121">            String response = categoryService.deleteCategoryByName(uid, category);</span>
+<span class="fc" id="L122">            return ResponseEntity.ok(response);</span>
+<span class="fc" id="L123">        } catch (Exception e) {</span>
+<span class="fc" id="L124">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L125">                    .body(&quot;Error deleting category: &quot; + e.getMessage());</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
