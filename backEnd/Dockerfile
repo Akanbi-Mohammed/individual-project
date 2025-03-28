@@ -1,20 +1,14 @@
-FROM openjdk:17-jdk-slim
-
-# Set the working directory
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the JAR file
-ARG JAR_FILE=target/budget-tracker-backend-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} /app/app.jar
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/budget-tracker-backend-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Copy Firebase credentials
-COPY ./src/main/resources/firebase/serviceAccountKey.json /app/serviceAccountKey.json
-
-# Set environment variable so Java can find the file
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/serviceAccountKey.json"
-
-# Expose port 8080
 EXPOSE 8080
-
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["/app/entrypoint.sh"]
