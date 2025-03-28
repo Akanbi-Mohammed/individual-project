@@ -19,7 +19,13 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         try {
-            InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("firebase/serviceAccountKey.json");
+            // Retrieve the file path from the environment variable
+            String credentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+            if (credentialPath == null || credentialPath.isEmpty()) {
+                throw new IllegalStateException("GOOGLE_APPLICATION_CREDENTIALS environment variable is not set!");
+            }
+            InputStream serviceAccount = new FileInputStream(credentialPath);
+
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .setDatabaseUrl("https://level4-project-default-rtdb.firebaseio.com/")
@@ -30,6 +36,7 @@ public class FirebaseConfig {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            // Optionally rethrow or handle the exception as needed
         }
     }
 

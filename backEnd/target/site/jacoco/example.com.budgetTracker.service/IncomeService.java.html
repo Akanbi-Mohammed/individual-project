@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IncomeService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.service</a> &gt; <span class="el_source">IncomeService.java</span></div><h1>IncomeService.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.service;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import example.com.budgetTracker.model.Income;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+@Service
+public class IncomeService {
+
+
+    private final Firestore firestore;
+    @Autowired
+<span class="fc" id="L19">    public IncomeService(Firestore firestore) {</span>
+<span class="fc" id="L20">        this.firestore = firestore;</span>
+<span class="fc" id="L21">    }</span>
+
+    // Update or add income for a given user and month
+    public void updateIncome(Income income) throws ExecutionException, InterruptedException {
+        // The document for this user in &quot;incomes&quot;
+<span class="fc" id="L26">        DocumentReference docRef = firestore.collection(&quot;incomes&quot;).document(income.getUserId());</span>
+
+        // We'll store the user's ID and the month-&gt;amount mapping
+<span class="fc" id="L29">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L30">        data.put(&quot;userId&quot;, income.getUserId());  // optional, but nice to keep</span>
+<span class="fc" id="L31">        data.put(income.getMonth(), income.getAmount()); // e.g. &quot;2025-02&quot;: 4000</span>
+
+        // Use merge so we don't overwrite other months
+<span class="fc" id="L34">        ApiFuture&lt;WriteResult&gt; writeResult = docRef.set(data, SetOptions.merge());</span>
+        // Wait for commit to complete
+<span class="fc" id="L36">        writeResult.get();</span>
+<span class="fc" id="L37">    }</span>
+    // Retrieve income for a given user and month
+    public Income getIncome(String uid, String month) throws ExecutionException, InterruptedException {
+<span class="fc" id="L40">        DocumentReference docRef = firestore.collection(&quot;incomes&quot;).document(uid);</span>
+<span class="fc" id="L41">        DocumentSnapshot document = docRef.get().get();</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (document.exists()) {</span>
+            // Grab the Double from the field named e.g. &quot;2025-02&quot;
+<span class="fc" id="L44">            Double amount = document.getDouble(month);</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">            if (amount != null) {</span>
+                // Return an Income object with that amount
+<span class="fc" id="L47">                return new Income(uid, month, amount);</span>
+            }
+        }
+        // If doc doesn't exist or field not found, return 0
+<span class="fc" id="L51">        return new Income(uid, month, 0);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -2,11 +2,15 @@
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
     background-color: #f4f4f9;
     font-family: 'Arial', sans-serif;
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
 }
-
+.flipped-icon {
+    transform: scaleX(-1);
+}
 .container {
     display: flex;
     justify-content: center;
@@ -118,8 +122,8 @@ button:hover {
 footer {
     text-align: center;
     padding: 10px;
-    position: fixed;
-    bottom: 0;
+    position: static;  /* Was: fixed */
+    bottom: auto;
     width: 100%;
     background-color: #f0f0f0;
 }
@@ -175,3 +179,218 @@ footer p {
 }
 
 
+.link-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit; /* keep same font as surrounding text */
+    padding: 0;
+}
+
+/* Navbar (if you keep it fixed) */
+.navbar {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: #222; /* modern dark color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;   /* remain fixed at top */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.navbar .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar .nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #50e3c2; /* accent color on hover */
+}
+
+/* Base Container */
+.about-container {
+    background: linear-gradient(135deg, #f0f7ff, #e0f2ff);
+    max-width: 900px;
+    margin: 100px auto 60px auto; /* ensure space from footer */
+    padding: 50px 40px;
+    border-radius: 16px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Headings */
+.intro-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.intro-subtitle {
+    font-size: 1.1rem;
+    color: #444;
+    margin-bottom: 30px;
+}
+
+/* Divider */
+.divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, #3b82f6, #1e40af);
+    border-radius: 4px;
+    margin: 30px auto;
+}
+
+/* Sections */
+.about-section,
+.thanks-section {
+    margin-bottom: 40px;
+}
+
+.about-section h2,
+.thanks-section h2 {
+    color: #1e40af;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.about-section p,
+.thanks-section p {
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Footer Section */
+.contact-footer {
+    background-color: #1a1a1a;
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+}
+
+.connect-text {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* allow wrapping on small screens */
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.social-icons img {
+    width: 36px;
+    height: 36px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    cursor: pointer;
+}
+
+.social-icons img:hover {
+    transform: scale(1.15);
+    opacity: 0.9;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+    .about-container {
+        margin: 80px 20px 50px;
+        padding: 40px 20px;
+    }
+
+    .intro-title {
+        font-size: 2rem;
+    }
+
+    .intro-subtitle {
+        font-size: 1rem;
+    }
+
+    .about-section h2,
+    .thanks-section h2 {
+        font-size: 1.3rem;
+    }
+
+    .about-section p,
+    .thanks-section p {
+        font-size: 0.95rem;
+    }
+
+    .divider {
+        width: 80%;
+    }
+
+    .social-icons img {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-container {
+        margin: 70px 15px 30px;
+        padding: 30px 15px;
+    }
+
+    .intro-title {
+        font-size: 1.8rem;
+    }
+
+    .intro-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .about-section p,
+    .thanks-section p {
+        font-size: 0.9rem;
+    }
+
+    .connect-text {
+        font-size: 1rem;
+    }
+
+    .social-icons {
+        gap: 20px;
+    }
+
+    .social-icons img {
+        width: 28px;
+        height: 28px;
+    }
+
+    footer p {
+        font-size: 0.8rem;
+    }
+}

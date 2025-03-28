@@ -153,7 +153,8 @@
 * **1 hour:** Finalised CSS and documentation updates in the GitHub repository.
 <br>
 <!-- ------------------------------------------------------------------------------------------------------- WEEK 11-->
-
+**Total Time (Semester 2): 247 hours**
+---
 ## **Week 11** (25 Nov 2024 - 2 Dec 2024) - 7 hours
 ### 25 Nov 2024 (Monday) - 1 hour
 * **0.5 hours:** Had a meeting with Dr Sofiat
@@ -166,3 +167,127 @@
 ### 30 Nov 2024 (Saturday) - 1 hour
 * **1 hour:** Conducted a final review of the MVP and prepared for the next phase.
 <br>
+
+<!-- ------------------------------------------------------------------------------------------------------- SEMESTER 2 -->
+
+## **Week 13** (6 Jan – 13 Jan 2025) – 20 hours
+### 6–10 Jan 2025
+* **6 hours:** Finalised project status report.
+* **4 hours:** Bug fixing and refining core functionality.
+* **4 hours:** Worked on the Requirements section of the dissertation.
+* **2 hours:** Started working on design diagrams and drafted meeting summary.
+* **4 hours:** Meeting prep and refinement of design pages.
+
+---
+
+## **Week 14** (13 Jan – 20 Jan 2025) – 20 hours
+### 13–17 Jan 2025
+* **4 hours:** Completed the Design section of the dissertation.
+* **5 hours:** Began Implementation draft.
+* **4 hours:** Continued bug fixing and improvements to deployed features.
+* **4 hours:** Worked on integrating frontend and backend.
+* **3 hours:** Prepared and conducted user walkthrough for informal feedback.
+
+---
+
+## **Week 15** (20 Jan – 27 Jan 2025) – 24 hours
+### 20–26 Jan 2025
+* **6 hours:** Worked on implementation draft.
+* **5 hours:** Fixed more bugs and implemented missing functionality.
+* **4 hours:** Deployment work for frontend and backend.
+* **5 hours:** Created mobile-friendly layout and tested it.
+* **4 hours:** Began working on user evaluation strategy and questionnaires.
+
+---
+
+## **Week 16** (27 Jan – 3 Feb 2025) – 24 hours
+### 27 Jan – 2 Feb 2025
+* **5 hours:** Refined UI/UX design and implementation.
+* **4 hours:** Added finishing touches to mobile version.
+* **5 hours:** Continued testing and fixing backend bugs.
+* **5 hours:** Sent evaluation forms to users.
+* **5 hours:** Scripted dummy data for stress testing.
+
+---
+
+## **Week 17** (3 Feb – 10 Feb 2025) – 20 hours
+### 3–9 Feb 2025
+* **5 hours:** Finished implementation section of dissertation.
+* **5 hours:** Created evaluation surveys (pre- and post-).
+* **4 hours:** Drafted early test plans and added dummy data to analytics.
+* **3 hours:** Continued deployment fixes.
+* **3 hours:** Weekly meeting prep and bug resolutions.
+
+---
+
+## **Week 18** (10 Feb – 17 Feb 2025) – 20 hours
+### 10–16 Feb 2025
+* **4 hours:** Created supervised evaluation session.
+* **5 hours:** Fixed bugs and improved analytics stress test visuals.
+* **5 hours:** Reviewed survey responses and planned evaluation write-up.
+* **3 hours:** Final deployment polish (frontend fully working).
+* **3 hours:** Dissertation prep and weekly reflection.
+
+---
+
+## **Week 19** (17 Feb – 24 Feb 2025) – 24 hours
+### 17–23 Feb 2025
+* **6 hours:** Backend protection update (user data fix).
+* **4 hours:** Finalised mobile version.
+* **5 hours:** Gathered feedback from mobile users.
+* **4 hours:** Sent out final evaluation surveys.
+* **5 hours:** Annotated code and added documentation to GitHub.
+
+---
+
+## **Week 20** (24 Feb – 3 Mar 2025) – 26 hours
+### 24 Feb – 2 Mar 2025
+* **6 hours:** Analysed survey responses and began evaluation section.
+* **4 hours:** Made final improvements to UI based on feedback.
+* **5 hours:** Created screenshots and added them to dissertation.
+* **4 hours:** Rewrote wireframes and clarified design choices.
+* **4 hours:** Set up backup of GitHub and firebase project.
+* **3 hours:** Weekly prep and reflection.
+
+---
+
+## **Week 21** (3 Mar – 10 Mar 2025) – 24 hours
+### 3–9 Mar 2025
+* **5 hours:** Implemented final dummy data script.
+* **4 hours:** Continued analysing evaluation data.
+* **4 hours:** Drafted Evaluation section of dissertation.
+* **3 hours:** Made final testing adjustments.
+* **5 hours:** Feedback analysis and preparation for ethics.
+* **3 hours:** No meeting due to illness – worked individually.
+
+---
+
+## **Week 22** (10 Mar – 17 Mar 2025) – 24 hours
+### 10–16 Mar 2025
+* **6 hours:** Finalised evaluation section.
+* **4 hours:** Ethics checklist sent and updated based on feedback.
+* **5 hours:** Polished website for demonstration.
+* **5 hours:** Prepared appendix, glossary, and references.
+* **4 hours:** Met with supervisor for feedback and final notes.
+
+---
+
+## **Week 23** (17 Mar – 24 Mar 2025) – 24 hours
+### 17–23 Mar 2025
+* **5 hours:** Incorporated feedback from supervisor.
+* **5 hours:** Added diagrams/screenshots and proofread dissertation.
+* **5 hours:** Prepared demo walkthrough with deployment link.
+* **4 hours:** Final bug fixes and polish on analytics/testing sections.
+* **5 hours:** Review of full draft and structure of appendices.
+
+---
+
+## **Week 24** (24 Mar – 28 Mar 2025) – 17 hours
+### 24–28 Mar 2025
+* **5 hours:** Final edits and formatting of dissertation.
+* **4 hours:** Uploaded final files to Moodle.
+* **5 hours:** Rehearsed for presentation and created slides.
+* **3 hours:** Uploaded presentation/demo materials to GitHub.
+
+
+

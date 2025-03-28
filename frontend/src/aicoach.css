@@ -1,0 +1,349 @@
+/* Global Settings */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* -------------------------------
+   🌟 SMART AI COACH CONTAINER
+--------------------------------*/
+.smart-ai-coach-container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* -------------------------------
+   📝 HEADER & TITLES
+--------------------------------*/
+.coach-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+.coach-header-icon {
+    color: #007acc;
+    font-size: 2.2rem;
+}
+.coach-title {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #333;
+}
+.coach-subtitle {
+    margin: 0 0 1.5rem 0;
+    color: #555;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+/* -------------------------------
+   📌 EMPTY STATES / SUMMARIES
+--------------------------------*/
+.coach-empty-state {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    color: #856404;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+.coach-summary {
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #444;
+}
+.coach-all-good {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #28a745;
+    font-weight: 600;
+}
+.coach-all-good-icon {
+    font-size: 1.4rem;
+}
+
+/* -------------------------------
+   📌 INSIGHT CARDS
+--------------------------------*/
+.insight-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #ddd;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* Left border by type */
+.insight-card[data-type="No Budget Set"] {
+    border-left: 6px solid #ff9800;
+}
+.insight-card[data-type="Overspending Warning"],
+.insight-card[data-type="Near-Limit Warning"],
+.insight-card[data-type="Forecast Warning"] {
+    border-left: 6px solid #d9534f;
+}
+.insight-card[data-type="Potential Savings"] {
+    border-left: 6px solid #28a745;
+}
+.insight-card[data-type="Large Expense"] {
+    border-left: 6px solid #f0ad4e;
+}
+.insight-card[data-type="Trending Warning"] {
+    border-left: 6px solid #2196f3;
+}
+
+.insight-card:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+}
+
+/* INSIGHT HEADER */
+.insight-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* INSIGHT LIST */
+.insight-card-list {
+    padding: 0;
+    margin-top: 5px;
+    list-style: none;
+}
+.insight-card-list li {
+    background: #f9f9f9;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.2s ease-in-out;
+    cursor: pointer;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.insight-card-list li:hover {
+    background: #eee;
+}
+
+/* -------------------------------
+   🎯 SHOW MORE / LESS BUTTON
+--------------------------------*/
+.show-more-container {
+    text-align: center;
+    margin: 1.2rem 0;
+}
+.show-more-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    padding: 12px 18px;
+    font-size: 1rem;
+    border-radius: 10px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+.show-more-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #003f80);
+    transform: translateY(-2px);
+}
+
+/* -------------------------------
+   📌 MODAL OVERLAY & BACKGROUND
+--------------------------------*/
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+}
+
+/* -------------------------------
+   🎨 MODAL CONTENT BOX
+--------------------------------*/
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center;
+    position: relative;
+    animation: fadeInUp 0.3s ease-out;
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -------------------------------
+   ✨ MODAL HEADER & TEXT
+--------------------------------*/
+.modal-content h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+.modal-content p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* -------------------------------
+   📄 EXPENSE DETAILS
+--------------------------------*/
+.modal-details-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    text-align: left;
+}
+.modal-details-list li {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.modal-details-list li::before {
+    content: "🔹";
+    font-size: 1.2rem;
+    color: #007bff;
+}
+
+/* -------------------------------
+   🎯 EXTRA SUGGESTIONS (TIP BOX)
+--------------------------------*/
+.extra-suggestions {
+    margin-top: 1rem;
+    background-color: #e9f5ff;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 5px solid #007bff;
+    text-align: left;
+}
+.extra-suggestions p {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    color: #0056b3;
+    font-weight: 500;
+}
+.extra-link {
+    display: block;
+    background: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+.extra-link:hover {
+    background: #0056b3;
+}
+
+/* -------------------------------
+   ❌ CLOSE BUTTON
+--------------------------------*/
+.modal-close-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    margin-top: 1rem;
+    transition: background 0.2s ease;
+    width: 100%;
+    justify-content: center;
+}
+.modal-close-btn:hover {
+    background-color: #c82333;
+}
+
+/* -------------------------------
+   Responsive Adjustments for Mobile
+--------------------------------*/
+@media (max-width: 600px) {
+    .smart-ai-coach-container {
+        padding: 1rem;
+        border-radius: 6px;
+    }
+    .coach-header-icon {
+        font-size: 1.6rem;
+    }
+    .coach-title {
+        font-size: 1.3rem;
+    }
+    .coach-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    .insight-card {
+        padding: 0.8rem;
+    }
+    .insight-card-header h3 {
+        font-size: 1rem;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 1rem;
+    }
+    .extra-suggestions p {
+        font-size: 0.88rem;
+    }
+    .extra-link {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+    }
+}

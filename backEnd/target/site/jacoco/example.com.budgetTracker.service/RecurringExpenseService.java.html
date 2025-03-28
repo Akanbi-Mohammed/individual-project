@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecurringExpenseService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.service</a> &gt; <span class="el_source">RecurringExpenseService.java</span></div><h1>RecurringExpenseService.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.service;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.*;
+import example.com.budgetTracker.model.RecurringExpense;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.WeekFields;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+
+@Service
+public class RecurringExpenseService {
+<span class="fc" id="L19">    private static final Logger logger = LoggerFactory.getLogger(RecurringExpenseService.class);</span>
+
+    private final Firestore firestore;
+    private final ExpenseService expenseService;
+
+    @Autowired
+<span class="fc" id="L25">    public RecurringExpenseService(Firestore firestore, ExpenseService expenseService) {</span>
+<span class="fc" id="L26">        this.firestore = firestore;</span>
+<span class="fc" id="L27">        this.expenseService = expenseService;</span>
+<span class="fc" id="L28">    }</span>
+
+    // Create a new recurring expense
+    public String addRecurringExpense(RecurringExpense recurringExpense) throws ExecutionException, InterruptedException {
+<span class="fc" id="L32">        CollectionReference recurringRef = firestore.collection(&quot;recurringExpenses&quot;);</span>
+<span class="fc" id="L33">        DocumentReference docRef = recurringRef.document();</span>
+<span class="fc" id="L34">        recurringExpense.setId(docRef.getId());</span>
+<span class="fc" id="L35">        ApiFuture&lt;WriteResult&gt; future = docRef.set(recurringExpense);</span>
+<span class="fc" id="L36">        future.get();</span>
+<span class="fc" id="L37">        logger.info(&quot;Added recurring expense with id: {}&quot;, docRef.getId());</span>
+<span class="fc" id="L38">        return docRef.getId();</span>
+    }
+
+    // Get all active recurring expenses for a user
+    public List&lt;RecurringExpense&gt; getRecurringExpenses(String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L43">        CollectionReference recurringRef = firestore.collection(&quot;recurringExpenses&quot;);</span>
+<span class="fc" id="L44">        Query query = recurringRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L45">        ApiFuture&lt;QuerySnapshot&gt; querySnapshot = query.get();</span>
+<span class="fc" id="L46">        List&lt;QueryDocumentSnapshot&gt; documents = querySnapshot.get().getDocuments();</span>
+<span class="fc" id="L47">        List&lt;RecurringExpense&gt; recurringExpenses = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (QueryDocumentSnapshot doc : documents) {</span>
+<span class="fc" id="L49">            RecurringExpense re = doc.toObject(RecurringExpense.class);</span>
+<span class="fc" id="L50">            re.setId(doc.getId());</span>
+<span class="fc" id="L51">            recurringExpenses.add(re);</span>
+<span class="fc" id="L52">        }</span>
+<span class="fc" id="L53">        return recurringExpenses;</span>
+    }
+
+    // Update a recurring expense
+    public void updateRecurringExpense(String id, RecurringExpense updatedRecurringExpense) throws ExecutionException, InterruptedException {
+<span class="fc" id="L58">        DocumentReference docRef = firestore.collection(&quot;recurringExpenses&quot;).document(id);</span>
+<span class="fc" id="L59">        docRef.set(updatedRecurringExpense, SetOptions.merge()).get();</span>
+<span class="fc" id="L60">        logger.info(&quot;Updated recurring expense with id: {}&quot;, id);</span>
+<span class="fc" id="L61">    }</span>
+
+    // Delete (or mark inactive) a recurring expense
+    public void deleteRecurringExpense(String id) throws ExecutionException, InterruptedException {
+<span class="fc" id="L65">        firestore.collection(&quot;recurringExpenses&quot;).document(id).delete().get();</span>
+<span class="fc" id="L66">        logger.info(&quot;Deleted recurring expense with id: {}&quot;, id);</span>
+<span class="fc" id="L67">    }</span>
+
+    // Helper method to generate period identifier based on frequency using UTC time zone.
+    private String generatePeriodIdentifier(String frequency, LocalDate now) {
+<span class="nc" id="L71">        String periodIdentifier = &quot;&quot;;</span>
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        switch (frequency.toLowerCase()) {</span>
+            case &quot;monthly&quot;:
+<span class="nc" id="L74">                periodIdentifier = now.getYear() + &quot;-&quot; + String.format(&quot;%02d&quot;, now.getMonthValue());</span>
+<span class="nc" id="L75">                break;</span>
+            case &quot;weekly&quot;:
+<span class="nc" id="L77">                int weekNumber = now.get(WeekFields.ISO.weekOfWeekBasedYear());</span>
+<span class="nc" id="L78">                periodIdentifier = now.getYear() + &quot;-W&quot; + weekNumber;</span>
+<span class="nc" id="L79">                break;</span>
+            case &quot;yearly&quot;:
+<span class="nc" id="L81">                periodIdentifier = String.valueOf(now.getYear());</span>
+<span class="nc" id="L82">                break;</span>
+            default:
+                break;
+        }
+<span class="nc" id="L86">        return periodIdentifier;</span>
+    }
+
+    // Helper method to process a single recurring expense for a given user.
+    private void processRecurringExpenseForUser(String uid, RecurringExpense rec, LocalDate now) {
+        try {
+<span class="nc" id="L92">            boolean due = false;</span>
+            // Convert start and end dates to LocalDate using UTC.
+<span class="nc" id="L94">            LocalDate startDate = rec.getStartDate().toInstant().atZone(ZoneId.of(&quot;UTC&quot;)).toLocalDate();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            LocalDate endDate = (rec.getEndDate() != null)</span>
+<span class="nc" id="L96">                    ? rec.getEndDate().toInstant().atZone(ZoneId.of(&quot;UTC&quot;)).toLocalDate()</span>
+<span class="nc" id="L97">                    : null;</span>
+
+<span class="nc bnc" id="L99" title="All 4 branches missed.">            switch (rec.getFrequency().toLowerCase()) {</span>
+                case &quot;monthly&quot;:
+<span class="nc bnc" id="L101" title="All 6 branches missed.">                    if (now.getDayOfMonth() == rec.getBillingDay() &amp;&amp; !now.isBefore(startDate)</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">                            &amp;&amp; (endDate == null || !now.isAfter(endDate))) {</span>
+<span class="nc" id="L103">                        due = true;</span>
+                    }
+                    break;
+                case &quot;weekly&quot;:
+<span class="nc bnc" id="L107" title="All 6 branches missed.">                    if (now.getDayOfWeek() == startDate.getDayOfWeek() &amp;&amp; !now.isBefore(startDate)</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                            &amp;&amp; (endDate == null || !now.isAfter(endDate))) {</span>
+<span class="nc" id="L109">                        due = true;</span>
+                    }
+                    break;
+                case &quot;yearly&quot;:
+<span class="nc bnc" id="L113" title="All 4 branches missed.">                    if (now.getMonth() == startDate.getMonth() &amp;&amp; now.getDayOfMonth() == startDate.getDayOfMonth()</span>
+<span class="nc bnc" id="L114" title="All 6 branches missed.">                            &amp;&amp; !now.isBefore(startDate) &amp;&amp; (endDate == null || !now.isAfter(endDate))) {</span>
+<span class="nc" id="L115">                        due = true;</span>
+                    }
+                    break;
+                default:
+<span class="nc" id="L119">                    logger.warn(&quot;Unrecognized frequency '{}' for recurring expense id: {}&quot;, rec.getFrequency(), rec.getId());</span>
+                    break;
+            }
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">            if (due) {</span>
+<span class="nc" id="L124">                String periodIdentifier = generatePeriodIdentifier(rec.getFrequency(), now);</span>
+<span class="nc" id="L125">                boolean exists = expenseService.existsRecurringExpense(uid, rec.getId(), periodIdentifier);</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                if (!exists) {</span>
+<span class="nc" id="L127">                    expenseService.createExpenseFromRecurring(uid, rec, periodIdentifier);</span>
+<span class="nc" id="L128">                    logger.info(&quot;Synced recurring expense id: {} for user: {} for period: {}&quot;, rec.getId(), uid, periodIdentifier);</span>
+                } else {
+<span class="nc" id="L130">                    logger.debug(&quot;Expense already exists for recurring expense id: {} and period: {} for user: {}&quot;, rec.getId(), periodIdentifier, uid);</span>
+                }
+            }
+<span class="nc" id="L133">        } catch (Exception e) {</span>
+<span class="nc" id="L134">            logger.error(&quot;Error processing recurring expense id: {} for user: {}. Error: {}&quot;, rec.getId(), uid, e.getMessage());</span>
+<span class="nc" id="L135">        }</span>
+<span class="nc" id="L136">    }</span>
+
+    // Sync recurring expenses for a specific user
+    public void syncRecurringExpenses(String uid) throws ExecutionException, InterruptedException {
+<span class="nc" id="L140">        List&lt;RecurringExpense&gt; recurringExpenses = getRecurringExpenses(uid);</span>
+        // Use UTC for consistency.
+<span class="nc" id="L142">        LocalDate now = LocalDate.now(ZoneId.of(&quot;UTC&quot;));</span>
+
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        for (RecurringExpense rec : recurringExpenses) {</span>
+<span class="nc" id="L145">            processRecurringExpenseForUser(uid, rec, now);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">    }</span>
+
+    // Sync all recurring expenses for all users.
+    public void syncAllRecurringExpenses() throws ExecutionException, InterruptedException {
+<span class="nc" id="L151">        logger.info(&quot;Starting sync for all recurring expenses.&quot;);</span>
+<span class="nc" id="L152">        CollectionReference recurringRef = firestore.collection(&quot;recurringExpenses&quot;);</span>
+<span class="nc" id="L153">        Query query = recurringRef.whereEqualTo(&quot;active&quot;, true);</span>
+<span class="nc" id="L154">        List&lt;QueryDocumentSnapshot&gt; documents = query.get().get().getDocuments();</span>
+
+<span class="nc" id="L156">        Map&lt;String, List&lt;RecurringExpense&gt;&gt; expensesByUser = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        for (QueryDocumentSnapshot doc : documents) {</span>
+<span class="nc" id="L158">            RecurringExpense re = doc.toObject(RecurringExpense.class);</span>
+<span class="nc" id="L159">            re.setId(doc.getId());</span>
+<span class="nc" id="L160">            expensesByUser.computeIfAbsent(re.getUserId(), k -&gt; new ArrayList&lt;&gt;()).add(re);</span>
+<span class="nc" id="L161">        }</span>
+
+<span class="nc" id="L163">        LocalDate now = LocalDate.now(ZoneId.of(&quot;UTC&quot;));</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        for (Map.Entry&lt;String, List&lt;RecurringExpense&gt;&gt; entry : expensesByUser.entrySet()) {</span>
+<span class="nc" id="L165">            String uid = entry.getKey();</span>
+<span class="nc" id="L166">            List&lt;RecurringExpense&gt; userRecurringExpenses = entry.getValue();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            for (RecurringExpense rec : userRecurringExpenses) {</span>
+<span class="nc" id="L168">                processRecurringExpenseForUser(uid, rec, now);</span>
+<span class="nc" id="L169">            }</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        logger.info(&quot;Completed sync for all recurring expenses.&quot;);</span>
+<span class="nc" id="L172">    }</span>
+    public String deleteAllRecurringExpenses(String uid) throws ExecutionException, InterruptedException {
+<span class="fc" id="L174">        CollectionReference recurringRef = firestore.collection(&quot;recurringExpenses&quot;);</span>
+<span class="fc" id="L175">        Query query = recurringRef.whereEqualTo(&quot;userId&quot;, uid);</span>
+<span class="fc" id="L176">        ApiFuture&lt;QuerySnapshot&gt; future = query.get();</span>
+<span class="fc" id="L177">        List&lt;QueryDocumentSnapshot&gt; documents = future.get().getDocuments();</span>
+
+<span class="fc bfc" id="L179" title="All 2 branches covered.">        if (documents.isEmpty()) {</span>
+<span class="fc" id="L180">            throw new RuntimeException(&quot;No recurring expenses found for user: &quot; + uid);</span>
+        }
+
+<span class="fc bfc" id="L183" title="All 2 branches covered.">        for (QueryDocumentSnapshot document : documents) {</span>
+<span class="fc" id="L184">            document.getReference().delete();</span>
+<span class="fc" id="L185">        }</span>
+
+<span class="fc" id="L187">        logger.info(&quot;Deleted all recurring expenses for user: {}&quot;, uid);</span>
+<span class="fc" id="L188">        return &quot;All recurring expenses deleted successfully.&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

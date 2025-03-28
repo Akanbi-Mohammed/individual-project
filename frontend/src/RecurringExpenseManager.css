@@ -1,0 +1,537 @@
+/* -------------------------------
+   🌟 Overall Page Styling
+--------------------------------*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* -------------------------------
+   📌 Main Container for Manage Categories
+--------------------------------*/
+.manage-categories-container {
+    width: 100%;
+    max-width: 100%; /* Expand to full available width */
+    margin: 2rem auto; /* Adds vertical spacing and centers container */
+    padding: 1.5rem; /* Internal spacing */
+    background: rgba(255, 255, 255, 0.85); /* Glass effect */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: left; /* For better readability */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* -------------------------------
+   Recurring Form Container
+--------------------------------*/
+.recurring-form-container {
+    background: rgba(255, 255, 255, 0.85);  /* Glass effect */
+    backdrop-filter: blur(10px); /* Blur effect */
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;  /* Scales within parent */
+    max-width: 100%; /* Expand to full width */
+}
+
+.recurring-form-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Form Titles */
+.recurring-form-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.recurring-form-subtitle {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+/* Form Layout */
+.recurring-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recurring-form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+/* Labels & Descriptions */
+.recurring-form-label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.recurring-form-description {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+/* Input Fields */
+.recurring-form-input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.recurring-form-input:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.2);
+}
+
+/* -------------------------------
+   ✅ Active Toggle (Switch)
+--------------------------------*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+    margin-top: 0.3rem;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 28px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #28a745;
+}
+
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* -------------------------------
+   🎨 Form Buttons
+--------------------------------*/
+.recurring-form-button {
+    background-color: #333;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.recurring-form-button:hover {
+    background-color: #007acc;
+}
+
+.delete-all-button {
+    background-color: #dc3545;
+    margin-top: 1rem;
+}
+
+.delete-all-button:hover {
+    background-color: #c82333;
+}
+
+/* -------------------------------
+   Card Grid for Recurring Expenses
+--------------------------------*/
+.recurring-grid-container {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);  /* Glass effect */
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+    max-width: 1350px;
+}
+
+.recurring-grid-container:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.recurring-list-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+/* Grid Layout for the Cards */
+.recurring-expense-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* -------------------------------
+   Individual Expense Card
+--------------------------------*/
+.recurring-expense-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.recurring-expense-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.recurring-expense-card.editing {
+    border: 2px solid #2196f3;
+    background: #fefefe;
+    position: static;
+    transform: none;
+    z-index: 2;
+    overflow: auto;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* -------------------------------
+   Card Header
+--------------------------------*/
+.recurring-expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.recurring-expense-header h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.category-label {
+    background: #007bff;
+    color: #fff;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* -------------------------------
+   Card Body
+--------------------------------*/
+.recurring-expense-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* -------------------------------
+   Card Footer
+--------------------------------*/
+.recurring-expense-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+/* Buttons within Cards */
+.expense-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-btn {
+    background: #ff9800;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.edit-btn:hover {
+    background: #e68900;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+/* -------------------------------
+   Inline Edit Mode
+--------------------------------*/
+.edit-card-header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.edit-card-header h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.edit-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    height: auto;
+}
+
+.edit-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Ensure input fields stay inside */
+.recurring-form-input {
+    height: auto;
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.recurring-form-input:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 0 3px rgba(33,150,243,0.2);
+}
+
+/* -------------------------------
+   Responsive Layouts
+--------------------------------*/
+/* Mobile (up to 768px) */
+@media (max-width: 768px) {
+    .recurring-form-container {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    .recurring-form {
+        flex-direction: column;
+    }
+    .recurring-form-group {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .recurring-expense-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .recurring-grid-container {
+        width: 100%;
+    }
+    .recurring-expense-card {
+        width: 100%;
+        min-height: auto;
+    }
+    .recurring-expense-card.editing {
+        max-width: 500px;
+        align-content: center;
+        position: static;
+        transform: none;
+        overflow-y: auto;
+    }
+    .recurring-expense-body {
+        grid-template-columns: 1fr;
+    }
+    .edit-form-grid {
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 100%;
+    }
+}
+
+/* Tablet (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .recurring-form-container {
+        width: 100%;
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
+    .recurring-expense-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    .recurring-expense-card {
+        max-width: 480px;
+        margin: 0 auto;
+        min-height: 300px;
+    }
+    .recurring-expense-card.editing {
+        max-width: 520px;
+        margin: 0 auto;
+        position: static;
+        transform: none;
+        overflow: visible;
+    }
+    .recurring-expense-body {
+        grid-template-columns: 1fr 1fr;
+    }
+    .edit-form-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    .edit-field {
+        flex: 1 1 45%;
+        min-width: 160px;
+    }
+}
+
+/* -------------------------------
+   Additional Styling for Manage Categories Container
+--------------------------------*/
+.manage-categories-container {
+    background: rgba(255, 255, 255, 0.85);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    margin: 2rem auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Show All and Delete All Categories Container */
+.show-all-delete-all-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.toggle-show-button {
+    margin-top: 10px;
+    background: #333;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-categories-button {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.delete-categories-button:hover {
+    background-color: #c82333;
+}
+
+.toggle-show-button:hover {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}

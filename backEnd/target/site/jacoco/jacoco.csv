@@ -1,0 +1,25 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Budget Tracker Backend,example.com.budgetTracker.service,CategoryService,69,380,11,21,9,78,10,19,1,12
+Budget Tracker Backend,example.com.budgetTracker.service,RecurringExpenseService,352,168,48,6,63,41,31,10,5,7
+Budget Tracker Backend,example.com.budgetTracker.service,ExpenseService,118,456,26,24,25,107,23,13,1,10
+Budget Tracker Backend,example.com.budgetTracker.service,GoalService,54,298,18,20,9,72,15,11,0,7
+Budget Tracker Backend,example.com.budgetTracker.service,IncomeService,0,77,1,3,0,17,1,4,0,3
+Budget Tracker Backend,example.com.budgetTracker.service,BudgetService,48,449,17,31,11,95,16,17,0,9
+Budget Tracker Backend,example.com.budgetTracker.config,FirebaseConfig,42,0,6,0,16,0,6,0,3,0
+Budget Tracker Backend,example.com.budgetTracker.config,PreflightCorsFilter,39,0,2,0,12,0,3,0,2,0
+Budget Tracker Backend,example.com.budgetTracker.config,WebConfig,49,0,0,0,8,0,2,0,2,0
+Budget Tracker Backend,example.com.budgetTracker,BudgetTrackerApplication,8,0,0,0,3,0,2,0,2,0
+Budget Tracker Backend,example.com.budgetTracker.model,Income,0,36,0,0,0,12,0,8,0,8
+Budget Tracker Backend,example.com.budgetTracker.model,Budget,0,53,0,0,0,23,0,12,0,12
+Budget Tracker Backend,example.com.budgetTracker.model,Category,0,26,0,0,0,11,0,6,0,6
+Budget Tracker Backend,example.com.budgetTracker.model,Goal,0,63,0,0,0,27,0,14,0,14
+Budget Tracker Backend,example.com.budgetTracker.model,RecurringExpense,0,103,0,0,0,43,0,22,0,22
+Budget Tracker Backend,example.com.budgetTracker.model,Expense,0,59,0,0,0,25,0,17,0,17
+Budget Tracker Backend,example.com.budgetTracker.controller,BudgetController,55,284,14,20,12,77,14,13,1,9
+Budget Tracker Backend,example.com.budgetTracker.controller,RecurringExpenseController,55,165,12,10,12,48,12,7,1,7
+Budget Tracker Backend,example.com.budgetTracker.controller,CategoryController,48,151,11,11,11,40,11,7,1,6
+Budget Tracker Backend,example.com.budgetTracker.controller,ExpenseController,91,211,7,5,26,62,6,10,1,9
+Budget Tracker Backend,example.com.budgetTracker.controller,GoalController,83,82,4,0,26,20,3,7,1,7
+Budget Tracker Backend,example.com.budgetTracker.controller,IncomeController,37,59,6,4,9,17,6,3,1,3
+Budget Tracker Backend,example.com.budgetTracker.controller,OptionsController,4,0,0,0,2,0,2,0,2,0
+Budget Tracker Backend,example.com.budgetTracker.scheduler,RecurringExpenseScheduler,23,0,0,0,10,0,3,0,3,0

@@ -1,46 +1,56 @@
 import React from 'react';
-import './styles.css'; // Ensure styles are correctly imported
-import emailIcon from './images/email.png'; // Your image path
-import linkedinIcon from './images/linkedin.png'; // Add LinkedIn icon
-import githubIcon from './images/github.png'; // Add GitHub icon
+import './styles.css';
+import Navbar from './navbar';
+import githubIcon from './images/github.png';
+import linkedinIcon from './images/linkedin.png';
+import emailIcon from './images/email.png';
 
-const ContactUs = () => {
+const AboutPage = () => {
     return (
         <>
-            <nav className="navbar">
-                <div className="logo">Budget Tracker</div>
-                <div className="nav-links">
-                    <a href="/">Home</a>
+            <Navbar />
+            <div className="about-container">
+                <h1 className="intro-title">Hi, I'm Mohammed!</h1>
+                <p className="intro-subtitle">
+                    This budgeting app was developed for my final year project at the University of Glasgow.
+                </p>
+
+                <hr className="divider" />
+
+                <div className="about-section">
+                    <h2>The Project</h2>
+                    <p>
+                        This tool was created to help individuals track their finances and build better budgeting habits.
+                        It provides insights through analytics and visualisations, and was developed over several months using React and Firebase.
+                    </p>
                 </div>
-            </nav>
 
-            <div className="about-section">
-                <h2>About Us</h2>
-                <p>Welcome to my final year project! If you want to learn more about it, feel free to reach out through the links below.</p>
-            </div>
-
-            <div className="contact-section">
-                <h2>Contact Us</h2>
-                <div className="contact-methods">
-                    <div className="contact-item">
-                        <img src={emailIcon} alt="Email Icon" />
-                        <p><strong>Email</strong></p>
-                        <a href="mailto:mohammedakanbi20@gmail.com">mohammedakanbi20@gmail.com</a> {/* Add mailto link */}
-                    </div>
-                    <div className="contact-item">
-                        <img src={linkedinIcon} alt="LinkedIn Icon" />
-                        <p><strong>LinkedIn</strong></p>
-                        <a href="https://www.linkedin.com/in/mohammed-akanbi-0167291b6?originalSubdomain=uk" target="_blank" rel="noopener noreferrer">linkedin.com/mohammed-akanbi</a> {/* LinkedIn hyperlink */}
-                    </div>
-                    <div className="contact-item">
-                        <img src={githubIcon} alt="GitHub Icon" />
-                        <p><strong>GitHub</strong></p>
-                        <a href="https://github.com/Akanbi-Mohammed/individual-project/" target="_blank" rel="noopener noreferrer">github.com/Akanbi-Mohammed</a> {/* GitHub hyperlink */}
-                    </div>
+                <div className="thanks-section">
+                    <h2>Help and Special Mentions</h2>
+                    <p>
+                        A big thank you to my supervisor, my friends who tested the app, and everyone who supported me
+                        throughout the development process.
+                    </p>
                 </div>
             </div>
+
+            <footer className="contact-footer">
+                <p className="connect-text">Feel free to connect with me:</p>
+                <div className="social-icons">
+                    <a href="mailto:mohammedakanbi20@gmail.com" target="_blank" rel="noopener noreferrer">
+                        <img src={emailIcon} alt="Email" />
+                    </a>
+                    <a href="https://www.linkedin.com/in/mohammed-akanbi-0167291b6" target="_blank" rel="noopener noreferrer">
+                        <img src={linkedinIcon} alt="LinkedIn" />
+                    </a>
+                    <a href="https://github.com/Akanbi-Mohammed/individual-project/" target="_blank" rel="noopener noreferrer">
+                        <img src={githubIcon} alt="GitHub" />
+                    </a>
+                </div>
+                <p className="copyright">© 2025 Mohammed Akanbi</p>
+            </footer>
         </>
     );
 };
 
-export default ContactUs;
+export default AboutPage;

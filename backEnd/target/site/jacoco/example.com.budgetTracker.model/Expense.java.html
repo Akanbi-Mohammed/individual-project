@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Expense.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.model</a> &gt; <span class="el_source">Expense.java</span></div><h1>Expense.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.model;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+<span class="fc" id="L9">public class Expense {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String description;
+    private double amount;
+    private String date;
+    private String category;
+
+    // New field to store the user ID
+    private String userId;
+    private String periodIdentifier;
+    private String recurringExpenseId;
+
+    // Getters and Setters
+
+    public Long getId() {
+<span class="fc" id="L28">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L32">        this.id = id;</span>
+<span class="fc" id="L33">    }</span>
+
+    public String getDescription() {
+<span class="fc" id="L36">        return description;</span>
+    }
+
+    public void setDescription(String description) {
+<span class="fc" id="L40">        this.description = description;</span>
+<span class="fc" id="L41">    }</span>
+
+    public double getAmount() {
+<span class="fc" id="L44">        return amount;</span>
+    }
+
+    public void setAmount(double amount) {
+<span class="fc" id="L48">        this.amount = amount;</span>
+<span class="fc" id="L49">    }</span>
+
+    public String getDate() {
+<span class="fc" id="L52">        return date;</span>
+    }
+
+    public void setDate(String date) {
+<span class="fc" id="L56">        this.date = date;</span>
+<span class="fc" id="L57">    }</span>
+
+    public String getCategory() {
+<span class="fc" id="L60">        return category;</span>
+    }
+
+    public void setCategory(String category) {
+<span class="fc" id="L64">        this.category = category;</span>
+<span class="fc" id="L65">    }</span>
+
+    // Getter and setter for userId
+    public String getUserId() {
+<span class="fc" id="L69">        return userId;</span>
+    }
+
+    public void setUserId(String userId) {
+<span class="fc" id="L73">        this.userId = userId;</span>
+<span class="fc" id="L74">    }</span>
+    public String getRecurringExpenseId() {
+<span class="fc" id="L76">        return recurringExpenseId;</span>
+    }
+
+    public void setRecurringExpenseId(String recurringExpenseId) {
+<span class="fc" id="L80">        this.recurringExpenseId = recurringExpenseId;</span>
+<span class="fc" id="L81">    }</span>
+
+    public String getPeriodIdentifier() {
+<span class="fc" id="L84">        return periodIdentifier;</span>
+    }
+
+    public void setPeriodIdentifier(String periodIdentifier) {
+<span class="fc" id="L88">        this.periodIdentifier = periodIdentifier;</span>
+<span class="fc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

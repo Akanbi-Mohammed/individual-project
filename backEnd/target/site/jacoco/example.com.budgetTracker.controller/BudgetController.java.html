@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BudgetController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.controller</a> &gt; <span class="el_source">BudgetController.java</span></div><h1>BudgetController.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.controller;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import example.com.budgetTracker.model.Budget;
+import example.com.budgetTracker.service.BudgetService;
+import example.com.budgetTracker.service.ExpenseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(&quot;/api/budgets&quot;)
+@CrossOrigin(origins = &quot;https://level4-project.web.app/&quot;)
+<span class="fc" id="L21">public class BudgetController {</span>
+
+    @Autowired
+    private BudgetService budgetService;
+    @Autowired
+    private ExpenseService expenseService;
+
+    /**
+     * Extracts the UID from the Authorization header using Firebase Admin.
+     * Expects the header to be in the format &quot;Bearer &lt;token&gt;&quot;.
+     */
+    public String getUidFromAuthorization(String authHeader) {
+        // Here we assume that authHeader is already checked for null or emptiness.
+<span class="nc" id="L34">        String token = authHeader;</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L36">            token = authHeader.substring(7);</span>
+        }
+        try {
+<span class="nc" id="L39">            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);</span>
+<span class="nc" id="L40">            return decodedToken.getUid();</span>
+<span class="nc" id="L41">        } catch (Exception e) {</span>
+<span class="nc" id="L42">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Invalid token&quot;, e);</span>
+        }
+    }
+
+    // Add a new budget for the authenticated user
+    @PostMapping
+    public ResponseEntity&lt;String&gt; addBudget(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @RequestBody Budget budget) {
+<span class="pc bpc" id="L51" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L52">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+        try {
+<span class="fc" id="L55">            String uid = getUidFromAuthorization(authHeader);</span>
+            // Set the userId on the budget object
+<span class="fc" id="L57">            budget.setUserId(uid);</span>
+<span class="fc" id="L58">            String updateTime = budgetService.addBudget(budget);</span>
+<span class="fc" id="L59">            return ResponseEntity.ok(&quot;Budget added successfully at: &quot; + updateTime);</span>
+<span class="fc" id="L60">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L61">            e.printStackTrace();</span>
+<span class="fc" id="L62">            return ResponseEntity.status(500).body(&quot;Error adding budget: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // Get all budgets for the authenticated user
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Budget&gt;&gt; getAllBudgets(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader) {
+<span class="pc bpc" id="L70" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L71">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+        try {
+<span class="fc" id="L74">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L75">            List&lt;Budget&gt; budgets = budgetService.getAllBudgets(uid);</span>
+<span class="fc" id="L76">            return ResponseEntity.ok(budgets);</span>
+<span class="fc" id="L77">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L78">            e.printStackTrace();</span>
+<span class="fc" id="L79">            return ResponseEntity.status(500).build();</span>
+        }
+    }
+
+    // Edit an existing budget (only if it belongs to the authenticated user)
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Budget&gt; editBudget(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id,
+            @RequestBody Budget updatedBudget) {
+<span class="pc bpc" id="L89" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L90">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+        try {
+<span class="fc" id="L93">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L94">            Budget existingBudget = budgetService.getBudgetById(id, uid);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (existingBudget == null) {</span>
+<span class="fc" id="L96">                return ResponseEntity.notFound().build();</span>
+            }
+            // Update fields (userId remains unchanged)
+<span class="fc" id="L99">            existingBudget.setCategory(updatedBudget.getCategory());</span>
+<span class="fc" id="L100">            existingBudget.setAmount(updatedBudget.getAmount());</span>
+<span class="fc" id="L101">            existingBudget.setMonth(updatedBudget.getMonth());</span>
+<span class="fc" id="L102">            Budget savedBudget = budgetService.saveBudget(existingBudget);</span>
+<span class="fc" id="L103">            return ResponseEntity.ok(savedBudget);</span>
+<span class="fc" id="L104">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L105">            e.printStackTrace();</span>
+<span class="fc" id="L106">            return ResponseEntity.status(500).build();</span>
+        }
+    }
+
+    // Delete a budget by ID for the authenticated user
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; deleteBudget(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id) {
+<span class="pc bpc" id="L115" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L116">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+        try {
+<span class="fc" id="L119">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L120">            budgetService.deleteBudget(id, uid);</span>
+<span class="fc" id="L121">            return ResponseEntity.ok(&quot;Budget deleted successfully.&quot;);</span>
+<span class="fc" id="L122">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L123">            e.printStackTrace();</span>
+<span class="fc" id="L124">            return ResponseEntity.status(500).body(&quot;Error deleting budget: &quot; + e.getMessage());</span>
+        }
+    }
+    @PutMapping(&quot;/updateCategory&quot;)
+    public ResponseEntity&lt;String&gt; updateBudgetCategory(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @RequestBody Map&lt;String, String&gt; payload) {
+<span class="pc bpc" id="L131" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L132">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+<span class="fc" id="L134">        String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L135">        String oldCategory = payload.get(&quot;oldCategory&quot;);</span>
+<span class="fc" id="L136">        String newCategory = payload.get(&quot;newCategory&quot;);</span>
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">        if (oldCategory == null || newCategory == null) {</span>
+<span class="fc" id="L138">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Missing oldCategory or newCategory&quot;);</span>
+        }
+        try {
+<span class="fc" id="L141">            budgetService.batchUpdateCategory(uid, oldCategory, newCategory);</span>
+<span class="fc" id="L142">            return ResponseEntity.ok(&quot;Expense categories updated successfully.&quot;);</span>
+<span class="fc" id="L143">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L144">            e.printStackTrace();</span>
+<span class="fc" id="L145">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L146">                    .body(&quot;Error updating expense categories: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/byCategory/{category}&quot;)
+    public ResponseEntity&lt;String&gt; deleteBudgetsByCategory(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @PathVariable String category) {
+<span class="fc" id="L153">        String uid = getUidFromAuthorization(authHeader);</span>
+        try {
+<span class="fc" id="L155">            budgetService.deleteBudgetsByCategory(uid, category);</span>
+<span class="fc" id="L156">            return ResponseEntity.ok(&quot;Budgets for category deleted successfully.&quot;);</span>
+<span class="fc" id="L157">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L158">            e.printStackTrace();</span>
+<span class="fc" id="L159">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L160">                    .body(&quot;Error deleting budgets: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/deleteWithExpenses/{budgetId}&quot;)
+    public ResponseEntity&lt;String&gt; deleteBudgetAndExpenses(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @PathVariable String budgetId
+    ) {
+        try {
+            // 1) Extract user ID
+<span class="fc" id="L170">            String uid = getUidFromAuthorization(authHeader);</span>
+
+            // 2) Fetch the budget from Firestore
+<span class="fc" id="L173">            Budget budget = budgetService.getBudgetById(budgetId, uid);</span>
+<span class="fc bfc" id="L174" title="All 2 branches covered.">            if (budget == null) {</span>
+<span class="fc" id="L175">                return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
+<span class="fc" id="L176">                        .body(&quot;Budget not found or does not belong to the user.&quot;);</span>
+            }
+
+            // 3) Get the budget's category
+<span class="fc" id="L180">            String category = budget.getCategory();</span>
+<span class="pc bpc" id="L181" title="1 of 4 branches missed.">            if (category == null || category.trim().isEmpty()) {</span>
+                // If no category, just delete the budget
+<span class="fc" id="L183">                budgetService.deleteBudget(budgetId, uid);</span>
+<span class="fc" id="L184">                return ResponseEntity.ok(&quot;Budget deleted (no category found).&quot;);</span>
+            }
+
+            // 4) Delete all expenses with that category
+            //    (Make sure your expenseService uses Firestore &amp; deleteExpensesByCategory)
+<span class="fc" id="L189">            expenseService.deleteExpensesByCategory(uid, category);</span>
+
+            // 5) Now delete the budget
+<span class="fc" id="L192">            budgetService.deleteBudget(budgetId, uid);</span>
+
+<span class="fc" id="L194">            return ResponseEntity.ok(&quot;Budget and all associated expenses deleted successfully.&quot;);</span>
+<span class="fc" id="L195">        } catch (Exception e) {</span>
+<span class="fc" id="L196">            e.printStackTrace();</span>
+<span class="fc" id="L197">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L198">                    .body(&quot;Error deleting budget and associated expenses: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/delete-all&quot;)
+    public ResponseEntity&lt;String&gt; deleteAllBudgets(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L204">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L205">            String response = budgetService.deleteAllBudgets(uid);</span>
+<span class="fc" id="L206">            return ResponseEntity.ok(response);</span>
+<span class="fc" id="L207">        } catch (Exception e) {</span>
+<span class="fc" id="L208">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L209">                    .body(&quot;Error deleting budgets: &quot; + e.getMessage());</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

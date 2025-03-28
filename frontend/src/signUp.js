@@ -1,21 +1,30 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from './fireBase';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
 const SignUp = () => {
-    const [fullName, setFullName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Create a navigate function
+    const navigate = useNavigate();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            navigate('/home'); // Navigate to the homepage after successful sign-up
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Store full name in the user's Firebase profile
+            await updateProfile(user, {
+                displayName: `${firstName} ${lastName}`,
+            });
+
+            // Navigate to the homepage after successful sign-up
+            navigate('/home');
         } catch (err) {
             setError(err.message);
         }
@@ -25,9 +34,6 @@ const SignUp = () => {
         <>
             <nav className="navbar">
                 <div className="logo">Budget Tracker</div>
-                <div className="nav-links">
-                    <a href="/contactUs">Contact Us</a>
-                </div>
             </nav>
             <div className="container">
                 <div className="form-wrapper">
@@ -36,9 +42,16 @@ const SignUp = () => {
                     <form onSubmit={handleSignUp}>
                         <input
                             type="text"
-                            placeholder="Full Name"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            placeholder="First Name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="text"
+                            placeholder="Last Name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
                             required
                         />
                         <input

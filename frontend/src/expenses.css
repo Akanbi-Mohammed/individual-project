@@ -22,14 +22,16 @@ body {
     margin: 0 1rem;
 }
 
+/* Expense Tracker Container */
 .expense-tracker {
-    width: 100%;
-    max-width: 800px;
+
+    max-width: none;
     margin: 0 auto;
     padding-top: 2rem;
     text-align: center;
 }
 
+/* Intro text */
 .intro-title {
     font-size: 2rem;
     color: #333;
@@ -41,24 +43,88 @@ body {
     color: #666;
 }
 
+/* Expense Form */
 .expense-form {
+    width: 100%;
     background-color: #ffffff;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 1rem 0;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2rem;
+}
+@media screen and (max-width: 600px){
+    .form-container {
+        max-width: 100%;
+        margin: 0;
+    }
 }
 
-.form-input {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
+.expense-form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* General styling for all input fields */
+.form-input,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+    height: auto;
+    display: block;
+    width: 100%;       /* Full width of container */
+    max-width: 100%;   /* Ensure it doesn't exceed container width */
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit; /* Match your app's font */
+    color: #333;
+    box-sizing: border-box; /* Ensures padding is included in total width */
+    background-color: #fff; /* Ensure consistent background */
+}
+
+/* Consistent focus effect */
+.form-input:focus,
+input[type="date"]:focus {
+    outline: none;
+    border-color: #2196f3; /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+/* Remove browser default styles for date picker */
+input[type="date"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: white;
+    height: 40px; /* Set a consistent height */
+    line-height: 1.5;
+    text-align: left;
+}
+
+/* Ensure dropdowns and date pickers match */
+select {
+    height: 40px; /* Same as input fields */
+}
+
+/* Responsive fixes for mobile */
+@media (max-width: 600px) {
+    .form-input,
+    input[type="date"],
+    select {
+        font-size: 0.9rem; /* Slightly smaller font for mobile */
+        padding: 0.45rem 0.65rem;
+        height: 45px; /* Slightly taller for better touch interaction */
+    }
 }
 
 .form-button {
-    background-color: #333;
+    background-color: #333333;
     color: #ffffff;
     padding: 0.75rem 1rem;
     border: none;
@@ -70,13 +136,18 @@ body {
 }
 
 .form-button:hover {
-    background-color: #444;
+    background-color: #007acc;
 }
 
-.cancel {
-    background-color: #888;
+.form-button.cancel {
+    background-color: #dc3545;
 }
 
+.form-button.cancel:hover {
+    background-color: #c82333;
+}
+
+/* Section titles and error texts */
 .section-title {
     font-size: 1.5rem;
     color: #333;
@@ -84,11 +155,12 @@ body {
 }
 
 .error-text {
-    color: #e74c3c;
+    color: #ff4d4d;
     font-size: 1rem;
     margin-bottom: 1rem;
 }
 
+/* Expense Cards */
 .expenses-list {
     margin-top: 1rem;
 }
@@ -102,7 +174,9 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .expense-card:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-5px);
@@ -114,13 +188,35 @@ body {
     margin: 5px 0;
 }
 
-
+/* Expense Buttons */
 .expense-buttons {
     display: flex;
+    justify-content: flex-end;
     gap: 0.5rem;
 }
 
-.edit-button, .delete-button {
+.expense-card-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+@media (max-width: 600px) {
+    .expense-card-content-wrapper {
+        flex-direction: column; /* stack text + buttons */
+        align-items: flex-start; /* text alignment on left */
+    }
+}
+
+/* Expense Edit Actions */
+.expense-edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.edit-button,
+.delete-button {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
@@ -143,12 +239,20 @@ body {
 .delete-button:hover {
     background-color: #c0392b;
 }
+
+/* Expense Filters */
 .expense-filters {
     margin-top: 20px;
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.expense-filters:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .expense-filters h3 {
@@ -175,19 +279,10 @@ body {
     color: #555;
 }
 
-.form-input {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-}
-
 .filter-button {
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #333;
+    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -197,24 +292,85 @@ body {
 }
 
 .filter-button:hover {
-    background-color: #555;
+    background-color: #0056b3;
 }
+
+/* Category Editing */
 .edit-categories-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
     padding: 15px;
-    background: #ffffff;
+    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     margin: 20px 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.category-item {
-    display: flex;
+.edit-categories-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.category-filter {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-filter:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Wrapper for the select + arrow flipping */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Default arrow: down */
+.select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 100%;
+    padding: 10px 40px 10px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, background-image 0.3s ease;
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px 20px;
+
+    /* Down arrow (M7 10l5 5 5-5z) */
+    background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='24' width='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+}
+
+/* When .open is set, arrow flips up */
+.select-wrapper.open select {
+    /* Up arrow (M7 14l5-5 5 5z) */
+    background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='24' width='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+}
+
+/* Focus style */
+.select-wrapper select:focus {
+    outline: none;
+    border-color: #1e40af;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+}
+
+.category-itemm  {
+
     align-items: center;
-    gap: 15px;
-    background: #f1f1f1;
+
+    background-color: #f1f1f1;
     padding: 10px 15px;
     border-radius: 8px;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
@@ -228,12 +384,11 @@ body {
 
 .category-input {
     margin-top: 15px;
-
     padding: 8px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    background: #ffffff;
+    background-color: #ffffff;
     transition: border-color 0.3s;
 }
 
@@ -256,7 +411,7 @@ body {
 
 .save-category-button {
     background-color: #808080;
-    color: white;
+    color: #fff;
 }
 
 .save-category-button:hover {
@@ -266,23 +421,94 @@ body {
 
 .delete-category-button {
     background-color: #111111;
-    color: white;
+    color: #fff;
 }
 
 .delete-category-button:hover {
     background-color: #c82333;
     transform: translateY(-2px);
 }
-.no-categories-message {
-    text-align: center;
-    color: #757575;
-    font-size: 14px;
-    margin: 10px 0;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+
+.delete-category-x {
+    margin-left: 8px;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
 }
+
+.delete-category-x:hover {
+    color: darkred;
+}
+
+/* Editing Form Fields */
+.edit-form-fields {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.edit-inputs {
+    display: flex;
+    flex: 1;
+    gap: 1rem;
+}
+
+.budget-edit-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    min-width: 100px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.save-button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-button {
+    padding: 0.5rem 1rem;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #da1212;
+}
+
+/* Month Navigation */
 .month-navigation {
     display: flex;
     justify-content: space-between;
@@ -290,13 +516,27 @@ body {
     gap: 15px;
     margin: 15px 0;
 }
+@media (max-width: 600px) {
+    .month-navigation {
+        display: flex;
+        flex-wrap: nowrap; /* Prevents stacking */
+        justify-content: space-between;
+        gap: 8px;
+    }
 
+    .month-button {
+        width: auto;
+        min-width: 90px; /* Adjust width so they don’t shrink too much */
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+}
 .month-button {
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     background-color: #333;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -307,7 +547,7 @@ body {
 }
 
 .month-button:hover {
-    background-color: #333;
+    background-color: #0056b3;
 }
 
 .month-display {
@@ -317,6 +557,7 @@ body {
     margin: 0 10px;
 }
 
+/* Form labels and descriptions */
 .form-label {
     margin-bottom: 20px;
     display: block;
@@ -333,8 +574,7 @@ body {
     text-align: left;
 }
 
-
-
+/* Updated form button styles */
 .form-button {
     width: 100%;
     padding: 10px;
@@ -358,15 +598,152 @@ body {
 .form-button.cancel:hover {
     background-color: #c82333;
 }
-.delete-category-x {
-    margin-left: 8px;
-    color: red;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 12px;
+.help-button-container {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 9999;
 }
 
-.delete-category-x:hover {
-    color: darkred;
+.help-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #007acc;
+    color: #ffffff;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.help-button:hover {
+    background-color: #005fa3;
+    transform: scale(1.05);
+}
+
+.help-button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+
+
+/* SweetAlert2 Confirm Button */
+.swal2-confirm {
+    font-size: 16px !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    min-width: 100px !important;
+}
+
+/* Responsive Design */
+
+/* Mobile Devices (max-width: 600px) */
+@media (max-width: 600px) {
+    .expense-tracker {
+        max-width: 100%;
+        padding: 10px;
+    }
+    .expense-form {
+        padding: 1.5rem;
+    }
+    .edit-categories-container {
+        padding: 10px;
+    }
+    .smart-ai-coach-container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    .smart-ai-coach-container h2 {
+        font-size: 20px;
+    }
+    .smart-ai-coach-container p,
+    .smart-ai-coach-container h3,
+    .smart-ai-coach-container li {
+        font-size: 13px;
+    }
+    .month-button {
+        width: 80px;
+        height: 35px;
+        font-size: 14px;
+    }
+    .form-button {
+        padding: 8px;
+        font-size: 14px;
+    }
+    .show-more-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    .modal-content {
+        padding: 15px;
+        max-width: 90%;
+    }
+}
+
+/* Tablets (min-width: 601px and max-width: 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .expense-tracker {
+        max-width: 95%;
+        padding: 15px;
+    }
+    .expense-form {
+        padding: 1.8rem;
+    }
+    .edit-categories-container {
+        padding: 12px;
+    }
+    .smart-ai-coach-container {
+        max-width: 95%;
+        padding: 18px;
+    }
+    .smart-ai-coach-container h2 {
+        font-size: 21px;
+    }
+    .smart-ai-coach-container p,
+    .smart-ai-coach-container h3,
+    .smart-ai-coach-container li {
+        font-size: 14px;
+    }
+    .month-button {
+        width: 90px;
+        height: 38px;
+        font-size: 15px;
+    }
+}
+
+/* Desktop (min-width: 1024px) */
+@media (min-width: 1024px) {
+    .expense-tracker {
+        max-width: 900px;
+    }
+}
+/* ---------------------------
+   ADMIN ACTIONS (for Expenses)
+---------------------------- */
+.admin-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.delete-all-expenses-button {
+    background-color: #ff4d4d;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.delete-all-expenses-button:hover {
+    background-color: #ff0000;
 }
 

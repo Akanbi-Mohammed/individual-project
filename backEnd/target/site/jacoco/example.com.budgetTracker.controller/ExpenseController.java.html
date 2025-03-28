@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.controller</a> &gt; <span class="el_source">ExpenseController.java</span></div><h1>ExpenseController.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.controller;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import example.com.budgetTracker.model.Expense;
+import example.com.budgetTracker.service.ExpenseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(&quot;/api/expenses&quot;)
+@CrossOrigin(origins = &quot;https://level4-project.web.app/&quot;)  // Update with your frontend's URL
+<span class="fc" id="L20">public class ExpenseController {</span>
+
+    @Autowired
+    private ExpenseService expenseService;
+
+    /**
+     * Helper method to extract and verify the Firebase ID token from the Authorization header.
+     * Expects a header of the form &quot;Bearer &lt;idToken&gt;&quot;.
+     */
+    public String getUidFromAuthorization(String authorizationHeader) {
+<span class="nc bnc" id="L30" title="All 4 branches missed.">        if (authorizationHeader == null || !authorizationHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L31">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing or invalid Authorization header&quot;);</span>
+        }
+        // Remove &quot;Bearer &quot; prefix to obtain the actual token
+<span class="nc" id="L34">        String idToken = authorizationHeader.substring(7);</span>
+        try {
+<span class="nc" id="L36">            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);</span>
+<span class="nc" id="L37">            String uid = decodedToken.getUid();</span>
+<span class="nc" id="L38">            System.out.println(&quot;Decoded UID: &quot; + uid);</span>
+<span class="nc" id="L39">            return uid;</span>
+<span class="nc" id="L40">        } catch (Exception e) {</span>
+<span class="nc" id="L41">            e.printStackTrace();</span>
+<span class="nc" id="L42">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Invalid token&quot;, e);</span>
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;String&gt; addExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @RequestBody Expense expense) {
+        try {
+<span class="fc" id="L51">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L52">            expense.setUserId(uid);  // Associate the expense with the authenticated user</span>
+<span class="fc" id="L53">            System.out.println(&quot;Received request to add expense: &quot; + expense);</span>
+<span class="fc" id="L54">            String responseMessage = expenseService.addExpense(expense);</span>
+<span class="fc" id="L55">            return ResponseEntity.ok(responseMessage);</span>
+<span class="nc" id="L56">        } catch (ResponseStatusException e) {</span>
+<span class="nc" id="L57">            e.printStackTrace();</span>
+<span class="nc" id="L58">            return ResponseEntity.status(e.getStatus()).body(e.getReason());</span>
+<span class="fc" id="L59">        } catch (Exception e) {</span>
+<span class="fc" id="L60">            e.printStackTrace();</span>
+<span class="fc" id="L61">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L62">                    .body(&quot;Error adding expense: &quot; + e.getMessage());</span>
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Expense&gt;&gt; getAllExpenses(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader) {
+        try {
+<span class="fc" id="L70">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L71">            List&lt;Expense&gt; expenses = expenseService.getAllExpenses(uid);</span>
+<span class="fc" id="L72">            return ResponseEntity.ok(expenses);</span>
+<span class="nc" id="L73">        } catch (ResponseStatusException e) {</span>
+<span class="nc" id="L74">            e.printStackTrace();</span>
+<span class="nc" id="L75">            return ResponseEntity.status(e.getStatus()).build();</span>
+<span class="fc" id="L76">        } catch (Exception e) {</span>
+<span class="fc" id="L77">            e.printStackTrace();</span>
+<span class="fc" id="L78">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();</span>
+        }
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Expense&gt; getExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id) {
+        try {
+<span class="fc" id="L87">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L88">            Expense expense = expenseService.getExpense(id, uid);</span>
+<span class="fc" id="L89">            return ResponseEntity.ok(expense);</span>
+<span class="nc" id="L90">        } catch (ResponseStatusException e) {</span>
+<span class="nc" id="L91">            e.printStackTrace();</span>
+<span class="nc" id="L92">            return ResponseEntity.status(e.getStatus()).build();</span>
+<span class="fc" id="L93">        } catch (Exception e) {</span>
+<span class="fc" id="L94">            e.printStackTrace();</span>
+<span class="fc" id="L95">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();</span>
+        }
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; updateExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id,
+            @RequestBody Expense expense) {
+        try {
+<span class="fc" id="L105">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L106">            expense.setUserId(uid);</span>
+<span class="fc" id="L107">            String responseMessage = expenseService.updateExpense(id, expense, uid);</span>
+<span class="fc" id="L108">            return ResponseEntity.ok(responseMessage);</span>
+<span class="nc" id="L109">        } catch (ResponseStatusException e) {</span>
+<span class="nc" id="L110">            e.printStackTrace();</span>
+<span class="nc" id="L111">            return ResponseEntity.status(e.getStatus()).body(e.getReason());</span>
+<span class="fc" id="L112">        } catch (Exception e) {</span>
+<span class="fc" id="L113">            e.printStackTrace();</span>
+<span class="fc" id="L114">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L115">                    .body(&quot;Error updating expense: &quot; + e.getMessage());</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; deleteExpense(
+            @RequestHeader(value = &quot;Authorization&quot;, required = false) String authHeader,
+            @PathVariable String id) {
+        try {
+<span class="fc" id="L124">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L125">            expenseService.deleteExpense(id, uid);</span>
+<span class="fc" id="L126">            return ResponseEntity.ok(&quot;Expense deleted successfully&quot;);</span>
+<span class="nc" id="L127">        } catch (ResponseStatusException e) {</span>
+<span class="nc" id="L128">            e.printStackTrace();</span>
+<span class="nc" id="L129">            return ResponseEntity.status(e.getStatus()).body(e.getReason());</span>
+<span class="fc" id="L130">        } catch (Exception e) {</span>
+<span class="fc" id="L131">            e.printStackTrace();</span>
+<span class="fc" id="L132">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L133">                    .body(&quot;Error deleting expense: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/byCategory/{category}&quot;)
+    public ResponseEntity&lt;String&gt; deleteExpensesByCategory(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @PathVariable String category) {
+<span class="fc" id="L140">        String uid = getUidFromAuthorization(authHeader);</span>
+        try {
+<span class="fc" id="L142">            expenseService.deleteExpensesByCategory(uid, category);</span>
+<span class="fc" id="L143">            return ResponseEntity.ok(&quot;Expenses for category deleted successfully.&quot;);</span>
+<span class="fc" id="L144">        } catch (Exception e) { // &lt;- changed from specific checked exceptions to catch all</span>
+<span class="fc" id="L145">            e.printStackTrace();</span>
+<span class="fc" id="L146">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L147">                    .body(&quot;Error deleting expenses: &quot; + e.getMessage());</span>
+        }
+    }
+
+    @DeleteMapping(&quot;/delete-all&quot;)
+    public ResponseEntity&lt;String&gt; deleteAllExpenses(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L154">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L155">            String response = expenseService.deleteAllExpenses(uid);</span>
+<span class="fc" id="L156">            return ResponseEntity.ok(response);</span>
+<span class="fc" id="L157">        } catch (Exception e) {</span>
+<span class="fc" id="L158">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L159">                    .body(&quot;Error deleting expenses: &quot; + e.getMessage());</span>
+        }
+    }
+    @PutMapping(&quot;/updateCategory&quot;)
+    public ResponseEntity&lt;String&gt; updateExpenseCategory(
+            @RequestHeader(&quot;Authorization&quot;) String authHeader,
+            @RequestBody Map&lt;String, String&gt; payload) {
+
+<span class="pc bpc" id="L167" title="2 of 4 branches missed.">        if (authHeader == null || authHeader.trim().isEmpty()) {</span>
+<span class="nc" id="L168">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Missing Authorization header&quot;);</span>
+        }
+
+<span class="fc" id="L171">        String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L172">        String oldCategory = payload.get(&quot;oldCategory&quot;);</span>
+<span class="fc" id="L173">        String newCategory = payload.get(&quot;newCategory&quot;);</span>
+
+<span class="pc bpc" id="L175" title="1 of 4 branches missed.">        if (oldCategory == null || newCategory == null) {</span>
+<span class="fc" id="L176">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Missing oldCategory or newCategory&quot;);</span>
+        }
+
+        try {
+<span class="fc" id="L180">            expenseService.updateCategory(uid, oldCategory, newCategory);</span>
+<span class="fc" id="L181">            return ResponseEntity.ok(&quot;Expense categories updated successfully.&quot;);</span>
+<span class="fc" id="L182">        } catch (ExecutionException | InterruptedException e) {</span>
+<span class="fc" id="L183">            e.printStackTrace();</span>
+<span class="fc" id="L184">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="fc" id="L185">                    .body(&quot;Error updating expense categories: &quot; + e.getMessage());</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

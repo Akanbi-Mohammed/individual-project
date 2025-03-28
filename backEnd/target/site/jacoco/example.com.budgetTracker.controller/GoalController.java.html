@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoalController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.controller</a> &gt; <span class="el_source">GoalController.java</span></div><h1>GoalController.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.controller;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
+import example.com.budgetTracker.model.Goal;
+import example.com.budgetTracker.service.GoalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+@RestController
+@RequestMapping(&quot;/api/goals&quot;)
+@CrossOrigin(origins = &quot;https://level4-project.web.app&quot;)
+<span class="fc" id="L19">public class GoalController {</span>
+
+    @Autowired
+    private GoalService goalService;
+
+    /**
+     * Extracts the UID from the Authorization header using Firebase Admin.
+     * Expects the header to be in the format &quot;Bearer &lt;token&gt;&quot;.
+     */
+    public String getUidFromAuthorization(String authHeader) {
+<span class="nc bnc" id="L29" title="All 4 branches missed.">        if (authHeader != null &amp;&amp; authHeader.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="nc" id="L30">            String token = authHeader.substring(7);</span>
+            try {
+<span class="nc" id="L32">                FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);</span>
+<span class="nc" id="L33">                return decodedToken.getUid();</span>
+<span class="nc" id="L34">            } catch (Exception e) {</span>
+<span class="nc" id="L35">                throw new ResponseStatusException(</span>
+                        org.springframework.http.HttpStatus.UNAUTHORIZED, &quot;Invalid token&quot;, e
+                );
+            }
+        }
+<span class="nc" id="L40">        throw new ResponseStatusException(</span>
+                org.springframework.http.HttpStatus.UNAUTHORIZED, &quot;Missing or invalid Authorization header&quot;
+        );
+    }
+
+    // Add a new goal for the authenticated user
+    @PostMapping
+    public ResponseEntity&lt;String&gt; addGoal(@RequestHeader(&quot;Authorization&quot;) String authHeader,
+                                          @RequestBody Goal goal) {
+        try {
+<span class="fc" id="L50">            String uid = getUidFromAuthorization(authHeader);</span>
+            // Associate the goal with the authenticated user
+<span class="fc" id="L52">            goal.setUserId(uid);</span>
+<span class="fc" id="L53">            String message = goalService.addGoal(goal);</span>
+<span class="fc" id="L54">            return ResponseEntity.ok(message);</span>
+<span class="nc" id="L55">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L56">            e.printStackTrace();</span>
+<span class="nc" id="L57">            return ResponseEntity.status(500).body(&quot;Error adding goal: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // Get all goals for the authenticated user
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Goal&gt;&gt; getAllGoals(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L65">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L66">            List&lt;Goal&gt; goals = goalService.getAllGoals(uid);</span>
+<span class="fc" id="L67">            return ResponseEntity.ok(goals);</span>
+<span class="nc" id="L68">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L69">            e.printStackTrace();</span>
+<span class="nc" id="L70">            return ResponseEntity.status(500).build();</span>
+        }
+    }
+
+    // Get a specific goal by ID for the authenticated user
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Goal&gt; getGoalById(@RequestHeader(&quot;Authorization&quot;) String authHeader,
+                                            @PathVariable String id) {
+        try {
+<span class="fc" id="L79">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L80">            Goal goal = goalService.getGoalById(id, uid);</span>
+<span class="fc" id="L81">            return ResponseEntity.ok(goal);</span>
+<span class="nc" id="L82">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L83">            e.printStackTrace();</span>
+<span class="nc" id="L84">            return ResponseEntity.status(500).build();</span>
+        }
+    }
+
+    // Update a goal by ID for the authenticated user
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; updateGoal(@RequestHeader(&quot;Authorization&quot;) String authHeader,
+                                             @PathVariable String id,
+                                             @RequestBody Goal goal) {
+        try {
+<span class="fc" id="L94">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L95">            String message = goalService.updateGoal(id, goal, uid);</span>
+<span class="fc" id="L96">            return ResponseEntity.ok(message);</span>
+<span class="nc" id="L97">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L98">            e.printStackTrace();</span>
+<span class="nc" id="L99">            return ResponseEntity.status(500).body(&quot;Error updating goal: &quot; + e.getMessage());</span>
+        }
+    }
+
+    // Delete a goal by ID for the authenticated user
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; deleteGoal(@RequestHeader(&quot;Authorization&quot;) String authHeader,
+                                             @PathVariable String id) {
+        try {
+<span class="fc" id="L108">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L109">            String message = goalService.deleteGoal(id, uid);</span>
+<span class="fc" id="L110">            return ResponseEntity.ok(message);</span>
+<span class="nc" id="L111">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L112">            e.printStackTrace();</span>
+<span class="nc" id="L113">            return ResponseEntity.status(500).body(&quot;Error deleting goal: &quot; + e.getMessage());</span>
+        }
+    }
+    @DeleteMapping(&quot;/delete-all&quot;)
+    public ResponseEntity&lt;String&gt; deleteAllGoals(@RequestHeader(&quot;Authorization&quot;) String authHeader) {
+        try {
+<span class="fc" id="L119">            String uid = getUidFromAuthorization(authHeader);</span>
+<span class="fc" id="L120">            String response = goalService.deleteAllGoals(uid);</span>
+<span class="fc" id="L121">            return ResponseEntity.ok(response);</span>
+<span class="nc" id="L122">        } catch (Exception e) {</span>
+<span class="nc" id="L123">            return ResponseEntity</span>
+<span class="nc" id="L124">                    .status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L125">                    .body(&quot;Error deleting goals: &quot; + e.getMessage());</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

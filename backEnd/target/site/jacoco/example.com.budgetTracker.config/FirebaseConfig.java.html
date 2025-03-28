@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirebaseConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Budget Tracker Backend</a> &gt; <a href="index.source.html" class="el_package">example.com.budgetTracker.config</a> &gt; <span class="el_source">FirebaseConfig.java</span></div><h1>FirebaseConfig.java</h1><pre class="source lang-java linenums">package example.com.budgetTracker.config;
+
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+@Configuration
+<span class="nc" id="L17">public class FirebaseConfig {</span>
+
+    @PostConstruct
+    public void init() {
+        try {
+            // Retrieve the file path from the environment variable
+<span class="nc" id="L23">            String credentialPath = System.getenv(&quot;GOOGLE_APPLICATION_CREDENTIALS&quot;);</span>
+<span class="nc bnc" id="L24" title="All 4 branches missed.">            if (credentialPath == null || credentialPath.isEmpty()) {</span>
+<span class="nc" id="L25">                throw new IllegalStateException(&quot;GOOGLE_APPLICATION_CREDENTIALS environment variable is not set!&quot;);</span>
+            }
+<span class="nc" id="L27">            InputStream serviceAccount = new FileInputStream(credentialPath);</span>
+
+<span class="nc" id="L29">            FirebaseOptions options = FirebaseOptions.builder()</span>
+<span class="nc" id="L30">                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))</span>
+<span class="nc" id="L31">                    .setDatabaseUrl(&quot;https://level4-project-default-rtdb.firebaseio.com/&quot;)</span>
+<span class="nc" id="L32">                    .build();</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (FirebaseApp.getApps().isEmpty()) {</span>
+<span class="nc" id="L35">                FirebaseApp.initializeApp(options);</span>
+            }
+<span class="nc" id="L37">        } catch (IOException e) {</span>
+<span class="nc" id="L38">            e.printStackTrace();</span>
+            // Optionally rethrow or handle the exception as needed
+<span class="nc" id="L40">        }</span>
+<span class="nc" id="L41">    }</span>
+
+    // Firestore bean to interact with Firestore database
+    @Bean
+    public Firestore getFirestore() {
+<span class="nc" id="L46">        return FirestoreClient.getFirestore();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
