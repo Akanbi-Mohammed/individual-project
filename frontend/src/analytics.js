@@ -45,7 +45,7 @@ const AnalyticsPage = () => {
     // -------------------------------------------------------
     const [expenses, setExpenses] = useState([]);
     const [budgets, setBudgets] = useState([]);
-    const [monthlyIncome, setMonthlyIncome] = useState(5000);
+    const [monthlyIncome, setMonthlyIncome] = useState();
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [alerts, setAlerts] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
@@ -180,7 +180,7 @@ const AnalyticsPage = () => {
             const monthKey = currentMonth.toISOString().slice(0, 7);
 
             const response = await axios.get(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/user-income?month=${monthKey}`,
+                `https://individual-project-lxa2.onrender.com/t2.run.app/api/user-income?month=${monthKey}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setMonthlyIncome(response.data.amount || 0);
@@ -195,7 +195,7 @@ const AnalyticsPage = () => {
             if (!user) return;
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses",
+                "https://individual-project-lxa2.onrender.com/t2.run.app/api/expenses",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setExpenses(response.data);
@@ -210,7 +210,7 @@ const AnalyticsPage = () => {
             if (!user) return;
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets",
+                "https://individual-project-lxa2.onrender.com/t2.run.app/api/budgets",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setBudgets(response.data);
@@ -225,7 +225,7 @@ const AnalyticsPage = () => {
             if (!user) return;
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                "https://individual-project-lxa2.onrender.com/t2.run.app/api/categories",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200 && response.data) {
@@ -690,7 +690,7 @@ const AnalyticsPage = () => {
                 </div>
             </div>
 
-            {/* Month Navigation */}
+
 
             {/* Month Navigation */}
             <div className="month-nav-bar">

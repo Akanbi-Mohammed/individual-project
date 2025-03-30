@@ -178,7 +178,7 @@ const SmartAICoach = ({ budgets = [], expenses = [] }) => {
             }
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                "https://individual-project-lxa2.onrender.com/api/categories",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200 && Array.isArray(response.data)) {

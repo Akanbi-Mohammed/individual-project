@@ -141,8 +141,8 @@ const HomePage = ({ firstName: propFirstName }) => {
             }
             const token = await user.getIdToken();
 
-            const budgetsUrl = "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets";
-            const expensesUrl = "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses";
+            const budgetsUrl = "https://individual-project-lxa2.onrender.com/api/budgets";
+            const expensesUrl = "https://individual-project-lxa2.onrender.com/api/expenses";
 
             // Fetch budgets and expenses in parallel
             const [budgetsResponse, expensesResponse] = await Promise.all([
@@ -183,7 +183,7 @@ const HomePage = ({ firstName: propFirstName }) => {
                 return;
             }
             const token = await user.getIdToken();
-            const goalsUrl = "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals";
+            const goalsUrl = "https://individual-project-lxa2.onrender.com/api/goals";
             const response = await axios.get(goalsUrl, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -218,7 +218,7 @@ const HomePage = ({ firstName: propFirstName }) => {
             }
             const token = await user.getIdToken();
             const response = await axios.get(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/user-income?month=${selectedMonth}`,
+                `https://individual-project-lxa2.onrender.com/api/user-income?month=${selectedMonth}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -291,7 +291,7 @@ const HomePage = ({ firstName: propFirstName }) => {
 
             // Send to backend
             await axios.post(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/user-income`,
+                `https://individual-project-lxa2.onrender.com/api/user-income`,
                 incomeData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -60,7 +60,7 @@ function RecurringExpenseManager() {
             if (!user) return;
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                "https://individual-project-lxa2.onrender.com/api/categories",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200 && Array.isArray(response.data)) {
@@ -88,7 +88,7 @@ function RecurringExpenseManager() {
             }
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses",
+                "https://individual-project-lxa2.onrender.com/api/recurring-expenses",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200) {
@@ -124,7 +124,7 @@ function RecurringExpenseManager() {
         try {
             const token = await auth.currentUser.getIdToken();
             await axios.delete(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses/delete-all",
+                "https://individual-project-lxa2.onrender.com/api/recurring-expenses/delete-all",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             Swal.fire("Deleted!", "All your recurring expenses have been removed.", "success");
@@ -194,7 +194,7 @@ function RecurringExpenseManager() {
             }
             const token = await user.getIdToken();
             const response = await axios.post(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses",
+                "https://individual-project-lxa2.onrender.com/api/recurring-expenses",
                 newRecurringExpense,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -233,7 +233,7 @@ function RecurringExpenseManager() {
             const token = await user.getIdToken();
             const updatedExpense = { ...expense, active: !expense.active };
             const response = await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses/${expense.id}`,
+                `https://individual-project-lxa2.onrender.com/api/recurring-expenses/${expense.id}`,
                 updatedExpense,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -269,7 +269,7 @@ function RecurringExpenseManager() {
             }
             const token = await user.getIdToken();
             const response = await axios.delete(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses/${expenseId}`,
+                `https://individual-project-lxa2.onrender.com/api/recurring-expenses/${expenseId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200) {
@@ -371,7 +371,7 @@ function RecurringExpenseManager() {
             }
             const token = await user.getIdToken();
             const response = await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses/${expenseId}`,
+                `https://individual-project-lxa2.onrender.com/api/recurring-expenses/${expenseId}`,
                 updatedExpense,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

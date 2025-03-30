@@ -100,7 +100,7 @@ const Goals = () => {
 
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals",
+                "https://individual-project-lxa2.onrender.com/api/goals",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -195,7 +195,7 @@ const Goals = () => {
             if (editingGoalId) {
                 // Updating existing goal
                 await axios.put(
-                    `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals/${editingGoalId}`,
+                    `https://individual-project-lxa2.onrender.com/api/goals/${editingGoalId}`,
                     goalData,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -215,7 +215,7 @@ const Goals = () => {
             } else {
                 // Creating a new goal
                 await axios.post(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals",
+                    "https://individual-project-lxa2.onrender.com/api/goals",
                     goalData,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -266,7 +266,7 @@ const Goals = () => {
             const token = await user.getIdToken();
 
             await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals/${editingGoalId}`,
+                `https://individual-project-lxa2.onrender.com/api/goals/${editingGoalId}`,
                 goalEdits,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -379,7 +379,7 @@ const Goals = () => {
             if (!confirmDelete.isConfirmed) return;
 
             await axios.delete(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals/${goalId}`,
+                `https://individual-project-lxa2.onrender.com/api/goals/${goalId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -422,7 +422,7 @@ const Goals = () => {
         try {
             const token = await auth.currentUser.getIdToken();
             await axios.delete(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals/delete-all",
+                "https://individual-project-lxa2.onrender.com/api/goals/delete-all",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -486,7 +486,7 @@ const Goals = () => {
             if (!newDeadline) return;
 
             await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/goals/${goalId}/extend`,
+                `https://individual-project-lxa2.onrender.com/api/goals/${goalId}/extend`,
                 { deadline: newDeadline },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

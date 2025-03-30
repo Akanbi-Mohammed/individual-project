@@ -1,52 +1,99 @@
-# 💸 Final Year Project – Budget Tracker
+# 💸 Personal Budget Tracker - Final Year Project
 
-Welcome to my final year individual project: a **Personal Budget Tracker** web application.
+**Mohammed Mustapha Akanbi**  
+📧 Student ID: 2630425a  
+👨‍🏫 Supervisor: Dr. Sofiat Olaosebikan
 
-This app helps users take control of their finances by tracking expenses, setting budgets, and managing financial goals.
-
-🔗 The app is live at: [https://level4-project.web.app](https://level4-project.web.app)
-
-📘 For technical details and deeper insights, check the [Project Wiki](https://github.com/Akanbi-Mohammed/individual-project/wiki)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Available-green?style=for-the-badge)](https://level4-project.web.app)
+[![Project Wiki](https://img.shields.io/badge/Project_Wiki-Documentation-blue?style=for-the-badge)](https://github.com/Akanbi-Mohammed/individual-project/wiki)
 
 ---
 
-## 🔧 Features
+## 🌟 Overview
 
-- 🔐 Firebase Authentication (Sign up, Login, Password Reset, Account Deletion)
-- 📊 Budget management with per-category monthly limits
-- 🧾 Expense tracking with category, description, amount, and date
-- 🔁 Recurring expense automation (e.g., subscriptions, rent)
-- 🎯 Goal setting and progress tracking with milestones and alerts
-- 📍 Auto-detect location and default currency via IP
-- 🧭 Interactive in-app tutorials powered by Joyride
-- 📱 Fully responsive UI – works on desktop, tablet, and mobile
+A modern web application that helps users track their finances with intuitive budgeting tools, expense tracking, and insightful analytics.
+
+🔹 **Key Benefits:**
+- Visualize spending patterns with interactive charts
+- Set and track financial goals
+- Manage recurring expenses automatically
+- Accessible across all devices
+
+---
+
+## 🚀 Features
+
+### 💳 Core Functionality
+- **Secure Authentication** with Firebase
+- **Budget Management** by categories
+- **Expense Tracking** with detailed records
+- **Recurring Payments** automation
+- **Financial Goals** with progress tracking
+
+### 📊 Analytics & Insights
+- Interactive spending charts
+- Monthly budget progress
+- Expense categorization
+- Custom reporting
+
+### 🎯 User Experience
+- Responsive design (mobile/desktop)
+- Interactive tutorials
+- Auto-currency detection
+- Dark/Light mode
 
 ---
 
 ## 🛠 Tech Stack
 
-| Layer     | Tools                                    |
-|-----------|------------------------------------------|
-| Frontend  | React, CSS Modules, SweetAlert2, Joyride |
-| Backend   | Spring Boot, Firebase Admin SDK          |
-| Auth      | Firebase Authentication                  |
-| Database  | Firebase Firestore                       |
-| Hosting   | Firebase Hosting (Frontend)              |
+| Component       | Technologies Used                          |
+|-----------------|-------------------------------------------|
+| **Frontend**    | React, CSS Modules, Chart.js, Joyride     |
+| **Backend**     | Spring Boot, Firebase Admin SDK           |
+| **Database**    | Firebase Firestore (NoSQL)                |
+| **Authentication** | Firebase Auth                         |
+| **Hosting**     | Firebase Hosting (Frontend)               |
 
 ---
 
-## How to Run (Frontend + Backend)
+## ⚙️ Installation & Setup
 
+### Prerequisites
+- Node.js v18+ & npm v9+
+- Java 17+
+- Maven
+- Firebase account
+
+### Quick Start
 ```bash
-# Clone the repo
+# Clone repository
 git clone https://github.com/Akanbi-Mohammed/individual-project.git
 cd individual-project
 
-# Start the backend
-cd backend
-./mvnw spring-boot:run
+# Start backend
+cd backend && ./mvnw spring-boot:run
 
-# Open a new terminal, then:
-cd frontend
-npm install
-npm start
+# In new terminal - start frontend
+cd frontend && npm install && npm start
+```
+### Testing
+- Manual Testing: Interact with the app on https://level4-project.web.app to verify core features.
+
+- Automated Tests: (Work in progress) Use testing frameworks (e.g., Jest for frontend, JUnit for backend) to run test suites.
+
+- Dummy Data: Use the provided scripts to add dummy data for stress testing the analytics page.
+### Deployment
+- Frontend: Deployed on Firebase Hosting (https://level4-project.web.app)
+
+- Backend: Deployed via Google Cloud Run 
+
+- Authentication & Database: Managed by Firebase Authentication and Firestore
+
+### Documentation
+- Manual: manual.md – How to use the application.
+
+- Plan: plan.md – Detailed weekly project plan.
+
+- Timelog: timelog.md – Recorded hours for the project.
+
+- Wiki: Project Wiki – Meeting logs, evaluations, and further documentation.

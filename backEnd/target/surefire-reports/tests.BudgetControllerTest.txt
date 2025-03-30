@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: tests.BudgetControllerTest
 -------------------------------------------------------------------------------
-Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.724 s - in tests.BudgetControllerTest
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.212 s - in tests.BudgetControllerTest

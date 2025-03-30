@@ -18,6 +18,7 @@ example\com\budgetTracker\config\PreflightCorsFilter.class
 example\com\budgetTracker\model\Goal.class
 example\com\budgetTracker\controller\IncomeController.class
 example\com\budgetTracker\service\ExpenseService.class
+example\com\budgetTracker\controller\HealthController.class
 example\com\budgetTracker\config\WebConfig.class
 example\com\budgetTracker\controller\GoalController.class
 example\com\budgetTracker\scheduler\RecurringExpenseScheduler.class

@@ -169,7 +169,7 @@ const BudgetTracker = () => {
                 const token = await user.getIdToken();
                 const monthString = formatToYearMonth(selectedMonth);
                 const response = await axios.get(
-                    `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/user-income?month=${monthString}`,
+                    `https://individual-project-lxa2.onrender.com/api/user-income?month=${monthString}`,
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
                 if (response.status === 200 && response.data && typeof response.data.amount === "number") {
@@ -190,7 +190,7 @@ const BudgetTracker = () => {
                 if (!user) return;
                 const token = await user.getIdToken();
                 const response = await axios.get(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                    "https://individual-project-lxa2.onrender.com/api/categories",
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
                 if (response.status === 200 && response.data) {
@@ -207,7 +207,7 @@ const BudgetTracker = () => {
                 if (!user) return;
                 const token = await user.getIdToken();
                 const response = await axios.get(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses",
+                    "https://individual-project-lxa2.onrender.com/api/expenses",
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
                 setExpenses(response.data);
@@ -220,7 +220,7 @@ const BudgetTracker = () => {
             try {
                 const token = await auth.currentUser.getIdToken();
                 const response = await axios.get(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets",
+                    "https://individual-project-lxa2.onrender.com/api/budgets",
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
                 setBudgets(response.data);
@@ -443,7 +443,7 @@ const BudgetTracker = () => {
                     month: monthString,
                 };
                 const response = await axios.post(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets",
+                    "https://individual-project-lxa2.onrender.com/api/budgets",
                     newBudget,
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
@@ -536,21 +536,7 @@ const BudgetTracker = () => {
                 return;
             }
 
-            // Ensure expenses are fetched before validating budget
-            if (!expenses || expenses.length === 0) {
-                await fetchExpenses(); // Fetch expenses if empty
-            }
 
-            if (!expenses || expenses.length === 0) {
-                Swal.fire({
-                    title: "⚠️ No Expense Data!",
-                    text: "Cannot validate budget without expense data. Please try again later.",
-                    icon: "warning",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#ff4d4d",
-                });
-                return;
-            }
 
             const monthString = formatToYearMonth(selectedMonth);
             const totalExpensesForCategory = expenses
@@ -628,7 +614,7 @@ const BudgetTracker = () => {
 
                 // 1) Update the single budget in backend
                 const response = await axios.put(
-                    `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/${editingBudgetId}`,
+                    `https://individual-project-lxa2.onrender.com/api/budgets/${editingBudgetId}`,
                     updatedBudget,
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
@@ -637,7 +623,7 @@ const BudgetTracker = () => {
                     // 2) If category changed, update all occurrences in budgets & expenses
                     if (oldCategory.trim().toLowerCase() !== editCategory.trim().toLowerCase()) {
                         await axios.put(
-                            "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories/updateCategory",
+                            "https://individual-project-lxa2.onrender.com/api/categories/updateCategory",
                             {oldCategory, newCategory: editCategory},
                             {headers: {Authorization: `Bearer ${token}`}}
                         );
@@ -651,7 +637,7 @@ const BudgetTracker = () => {
 
                             // 4) Save updated categories to Firestore
                             await axios.put(
-                                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                                "https://individual-project-lxa2.onrender.com/api/categories",
                                 {userId: auth.currentUser.uid, categories: updatedCategories},
                                 {headers: {Authorization: `Bearer ${token}`}}
                             );
@@ -739,7 +725,7 @@ const BudgetTracker = () => {
                     if (result.isConfirmed) {
                         // Delete ONLY the budget
                         await axios.delete(
-                            `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/${budgetId}`,
+                            `https://individual-project-lxa2.onrender.com/api/budgets/${budgetId}`,
                             {headers: {Authorization: `Bearer ${token}`}}
                         );
                         Swal.fire("✅ Budget Deleted!", "The budget was removed.", "success");
@@ -747,7 +733,7 @@ const BudgetTracker = () => {
                     } else if (result.isDenied) {
                         // Delete budget AND associated expenses
                         await axios.delete(
-                            `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/deleteWithExpenses/${budgetId}`,
+                            `https://individual-project-lxa2.onrender.com/api/budgets/deleteWithExpenses/${budgetId}`,
                             {headers: {Authorization: `Bearer ${token}`}}
                         );
                         Swal.fire("✅ Budget & Expenses Deleted!", "Both were removed.", "success");
@@ -775,201 +761,239 @@ const BudgetTracker = () => {
             setEditCategoryValue(currentName);
         };
 
-        const handleSaveCategory = async (index) => {
-            const newName = editCategoryValue.trim();
-            if (!newName) {
-                Swal.fire({
-                    title: "⚠️ Invalid Category!",
-                    text: "Category name must be non-empty.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#ff4d4d",
-                });
-                return;
-            }
 
-            const oldName = categories[index];
-            if (newName !== oldName && categories.includes(newName)) {
-                Swal.fire({
-                    title: "⚠️ Duplicate Category!",
-                    text: `"${newName}" already exists. Category name must be unique.`,
-                    icon: "error",
-                    confirmButtonText: "OK",
-                    confirmButtonColor: "#ff4d4d",
-                });
-                return;
-            }
+    const handleSaveCategory = async (index) => {
+        const newName = editCategoryValue.trim();
+        if (!newName) {
+            Swal.fire({
+                title: "⚠️ Invalid Category!",
+                text: "Category name must be non-empty.",
+                icon: "error",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#ff4d4d",
+            });
+            return;
+        }
 
+        const oldName = categories[index];
+        if (newName !== oldName && categories.includes(newName)) {
+            Swal.fire({
+                title: "⚠️ Duplicate Category!",
+                text: `"${newName}" already exists. Category name must be unique.`,
+                icon: "error",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#ff4d4d",
+            });
+            return;
+        }
+
+        try {
+            const token = await auth.currentUser.getIdToken();
+
+            // 1. Update categories in Firestore
+            const updatedCategories = [...categories];
+            updatedCategories[index] = newName;
+
+            await axios.put(
+                "https://individual-project-lxa2.onrender.com/api/categories",
+                {
+                    userId: auth.currentUser.uid,
+                    categories: updatedCategories
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+
+            // 2. Update budget and expenses where category was used
+            await axios.put(
+                "https://individual-project-lxa2.onrender.com/api/budgets/updateCategory",
+                { oldCategory: oldName, newCategory: newName },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            await axios.put(
+                "https://individual-project-lxa2.onrender.com/api/expenses/updateCategory",
+                { oldCategory: oldName, newCategory: newName },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            // 3. Update frontend state
+            setCategories(updatedCategories);
+
+            // 🔥 Update selectedCategory or editCategory if affected
+            if (selectedCategory === oldName) setSelectedCategory(newName);
+            if (editCategory === oldName) setEditCategory(newName);
+
+            fetchBudgets();
+            fetchExpenses();
+
+            Swal.fire({
+                title: "✅ Category Updated!",
+                text: `Renamed "${oldName}" to "${newName}" in all budgets and expenses.`,
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#28a745",
+            });
+
+            setEditingCategoryIndex(null);
+            setEditCategoryValue("");
+        } catch (error) {
+            console.error("Error updating category:", error);
+            Swal.fire({
+                title: "❌ Error!",
+                text: "An error occurred while updating the category. Please try again.",
+                icon: "error",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#ff4d4d",
+            });
+        }
+    };
+
+
+    const updateCategoriesBackend = async (updatedCategories) => {
+        try {
+            const user = auth.currentUser;
+            if (!user) return;
+            const token = await user.getIdToken();
+
+            await axios.put(
+                "https://individual-project-lxa2.onrender.com/api/categories",
+                {
+                    userId: user.uid,
+                    categories: updatedCategories
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+        } catch (error) {
+            console.error("Error updating categories in backend:", error);
+        }
+    };
+
+
+    const handleCancelEditCategory = () => {
+            setEditingCategoryIndex(null);
+            setEditCategoryValue("");
+        };
+
+    const handleDeleteCategory = async (categoryName) => {
+        // 1. Find the category’s real index in the unsorted categories array
+        const realIndex = categories.indexOf(categoryName);
+        if (realIndex === -1) {
+            console.error("Category not found in array:", categoryName);
+            return;
+        }
+
+        // 2. For searching budgets/expenses, we can do case-insensitive
+        const lowerName = categoryName.trim().toLowerCase();
+
+        const associatedBudgets = budgets.filter(
+            (b) => b.category.trim().toLowerCase() === lowerName
+        );
+        const associatedExpenses = expenses.filter(
+            (exp) => exp.category.trim().toLowerCase() === lowerName
+        );
+
+        let swalOptions;
+        if (associatedBudgets.length > 0 || associatedExpenses.length > 0) {
+            swalOptions = {
+                title: "🗑️ Delete Category?",
+                html: `
+        <p style="font-size: 16px;">
+          Do you want to delete the "<strong>${categoryName}</strong>" category only,
+          or delete it along with all associated budgets and expenses?
+        </p>`,
+                icon: "warning",
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: "Delete Category Only",
+                denyButtonText: "Delete Category & Data",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#ff4d4f",
+                denyButtonColor: "#007acc",
+                cancelButtonColor: "#999",
+            };
+        } else {
+            swalOptions = {
+                title: "🗑️ Delete Category?",
+                text: `Do you want to delete the "${categoryName}" category?`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Delete Category",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: "#ff4d4f",
+                cancelButtonColor: "#007acc",
+            };
+        }
+
+        Swal.fire(swalOptions).then(async (result) => {
+            if (!result.isConfirmed && !result.isDenied) return;
             try {
                 const token = await auth.currentUser.getIdToken();
-                // 1. Update categories in Firestore
-                const updatedCategories = [...categories];
-                updatedCategories[index] = newName;
 
+                // 3. If user chooses "Delete Category & Data", remove budgets/expenses
+                if (result.isDenied) {
+                    await axios.delete(
+                        `https://individual-project-lxa2.onrender.com/api/budgets/byCategory/${encodeURIComponent(
+                            categoryName
+                        )}`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    await axios.delete(
+                        `https://individual-project-lxa2.onrender.com/api/expenses/byCategory/${encodeURIComponent(
+                            categoryName
+                        )}`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                }
+
+                // 4. Remove category from local array
+                const updatedCategories = categories.filter((_, i) => i !== realIndex);
+
+                // 5. PUT to backend with userId + updated list
                 await axios.put(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
-                    {categories: updatedCategories},
-                    {headers: {Authorization: `Bearer ${token}`}}
+                    "https://individual-project-lxa2.onrender.com/api/categories",
+                    {
+                        userId: auth.currentUser.uid,
+                        categories: updatedCategories,
+                    },
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
                 );
 
-                // 2. Update budget and expenses where category was used
-                await axios.put(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/updateCategory",
-                    {oldCategory: oldName, newCategory: newName},
-                    {headers: {Authorization: `Bearer ${token}`}}
-                );
-                await axios.put(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/updateCategory",
-                    {oldCategory: oldName, newCategory: newName},
-                    {headers: {Authorization: `Bearer ${token}`}}
-                );
-
-                // 3. Update the frontend state after successful backend update
+                // 6. Update local state, re-fetch budgets & expenses
                 setCategories(updatedCategories);
                 fetchBudgets();
                 fetchExpenses();
 
                 Swal.fire({
-                    title: "✅ Category Updated!",
-                    text: `Renamed "${oldName}" to "${newName}" in all budgets and expenses.`,
+                    title: "✅ Category Deleted!",
+                    html: `<p style="font-size: 16px; color: #28a745;">
+                 The category "<strong>${categoryName}</strong>" ${
+                        result.isDenied ? "and all related data" : ""
+                    } have been deleted.
+               </p>`,
                     icon: "success",
                     confirmButtonText: "OK",
                     confirmButtonColor: "#28a745",
                 });
-
-                setEditingCategoryIndex(null);
-                setEditCategoryValue("");
             } catch (error) {
-                console.error("Error updating category:", error);
+                console.error("Error deleting category:", error);
                 Swal.fire({
                     title: "❌ Error!",
-                    text: "An error occurred while updating the category. Please try again.",
+                    text: "An error occurred while deleting the category. Please try again.",
                     icon: "error",
                     confirmButtonText: "OK",
-                    confirmButtonColor: "#ff4d4d",
+                    confirmButtonColor: "#ff4d4f",
                 });
             }
-        };
+        });
+    };
 
-        const updateCategoriesBackend = async (updatedCategories) => {
-            try {
-                const user = auth.currentUser;
-                if (!user) return;
-                const token = await user.getIdToken();
-                await axios.put(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
-                    {categories: updatedCategories},
-                    {headers: {Authorization: `Bearer ${token}`}}
-                );
-            } catch (error) {
-                console.error("Error updating categories in backend:", error);
-            }
-        };
 
-        const handleCancelEditCategory = () => {
-            setEditingCategoryIndex(null);
-            setEditCategoryValue("");
-        };
-
-        const handleDeleteCategory = async (index) => {
-            const categoryToDelete = categories[index].trim().toLowerCase();
-            const associatedBudgets = budgets.filter(
-                (b) => b.category.trim().toLowerCase() === categoryToDelete
-            );
-            const associatedExpenses = expenses.filter(
-                (exp) => exp.category.trim().toLowerCase() === categoryToDelete
-            );
-
-            let swalOptions;
-            if (associatedBudgets.length > 0 || associatedExpenses.length > 0) {
-                swalOptions = {
-                    title: "🗑️ Delete Category?",
-                    html: `
-            <p style="font-size: 16px;">
-                Do you want to delete the "<strong>${categoryToDelete}</strong>" category only,
-                or delete it along with all associated budgets and expenses?
-            </p>`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    showDenyButton: true,
-                    confirmButtonText: "Delete Category Only",
-                    denyButtonText: "Delete Category & Data",
-                    cancelButtonText: "Cancel",
-                    confirmButtonColor: "#ff4d4f",
-                    denyButtonColor: "#007acc",
-                    cancelButtonColor: "#007acc",
-                };
-            } else {
-                swalOptions = {
-                    title: "🗑️ Delete Category?",
-                    text: `Do you want to delete the "${categoryToDelete}" category?`,
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Delete Category",
-                    cancelButtonText: "Cancel",
-                    confirmButtonColor: "#ff4d4f",
-                    cancelButtonColor: "#007acc",
-                };
-            }
-
-            Swal.fire(swalOptions).then(async (result) => {
-                if (!result.isConfirmed && !result.isDenied) return;
-                try {
-                    const token = await auth.currentUser.getIdToken();
-                    // If user chooses to delete budgets & expenses as well
-                    if (result.isDenied) {
-                        try {
-                            await axios.delete(
-                                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/byCategory/${encodeURIComponent(categoryToDelete)}`,
-                                {headers: {Authorization: `Bearer ${token}`}}
-                            );
-                            await axios.delete(
-                                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/byCategory/${encodeURIComponent(categoryToDelete)}`,
-                                {headers: {Authorization: `Bearer ${token}`}}
-                            );
-                        } catch (err) {
-                            console.error("Error deleting budgets/expenses:", err);
-                            Swal.fire("❌ Error", "Failed to delete budgets/expenses. Try again.", "error");
-                            return;
-                        }
-                    }
-
-                    // Delete the category in Firestore
-                    const updatedCategories = categories.filter((_, i) => i !== index);
-                    await axios.put(
-                        "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
-                        {categories: updatedCategories},
-                        {headers: {Authorization: `Bearer ${token}`}}
-                    );
-
-                    // Update UI
-                    setCategories(updatedCategories);
-                    fetchBudgets();
-                    fetchExpenses();
-                    setEditingCategoryIndex(null);
-                    setEditCategoryValue("");
-
-                    Swal.fire({
-                        title: "✅ Category Deleted!",
-                        html: `<p style="font-size: 16px; color: #28a745;">
-                    The category "<strong>${categoryToDelete}</strong>" and all related data have been deleted.
-                </p>`,
-                        icon: "success",
-                        confirmButtonText: "OK",
-                        confirmButtonColor: "#28a745",
-                    });
-                } catch (error) {
-                    console.error("Error deleting category:", error);
-                    Swal.fire({
-                        title: "❌ Error!",
-                        text: "An error occurred while deleting the category. Please try again.",
-                        icon: "error",
-                        confirmButtonText: "OK",
-                        confirmButtonColor: "#ff4d4f",
-                    });
-                }
-            });
-        };
     // ---------------------------
     // Joyride Callback for Auto-Advancing
     // ---------------------------
@@ -999,7 +1023,7 @@ const BudgetTracker = () => {
             try {
                 const token = await auth.currentUser.getIdToken();
                 await axios.delete(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets/delete-all",
+                    "https://individual-project-lxa2.onrender.com/api/budgets/delete-all",
                     {
                         headers: {Authorization: `Bearer ${token}`},
                     }
@@ -1032,7 +1056,7 @@ const BudgetTracker = () => {
             try {
                 const token = await auth.currentUser.getIdToken();
                 await axios.delete(
-                    "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories/delete-all",
+                    "https://individual-project-lxa2.onrender.com/api/categories/delete-all",
                     {
                         headers: {Authorization: `Bearer ${token}`},
                     }
@@ -1182,10 +1206,12 @@ const BudgetTracker = () => {
                         ) : (
                             (showAll ? sortedCategories : sortedCategories.slice(0, 3))
                                 .filter((cat) => cat !== "Other")
-                                .map((cat, index) => {
-                                    const isEditing = editingCategoryIndex === index;
+                                .map((cat) => {
+                                    // Find the category's index in the original unsorted array
+                                    const realIndex = categories.indexOf(cat);
+                                    const isEditing = editingCategoryIndex === realIndex;
                                     return (
-                                        <div className="category-item" key={index}>
+                                        <div className="category-item" key={cat}>
                                             {isEditing ? (
                                                 <>
                                                     <input
@@ -1197,18 +1223,20 @@ const BudgetTracker = () => {
                                                     <div className="category-buttons">
                                                         <button
                                                             className="save-category-button"
-                                                            onClick={() => handleSaveCategory(index)}
+                                                            onClick={() => handleSaveCategory(realIndex)}
                                                         >
                                                             Save
                                                         </button>
                                                         <button
                                                             className="delete-category-button"
-                                                            onClick={() => handleDeleteCategory(index)}
+                                                            onClick={() => handleDeleteCategory(cat)}
                                                         >
                                                             Delete
                                                         </button>
-                                                        <button className="cancel-edit-button"
-                                                                onClick={handleCancelEditCategory}>
+                                                        <button
+                                                            className="cancel-edit-button"
+                                                            onClick={handleCancelEditCategory}
+                                                        >
                                                             Cancel
                                                         </button>
                                                     </div>
@@ -1218,7 +1246,7 @@ const BudgetTracker = () => {
                                                     <span className="category-name">{cat}</span>
                                                     <button
                                                         className="edit-categories-button"
-                                                        onClick={() => startEditingCategory(index, cat)}
+                                                        onClick={() => startEditingCategory(realIndex, cat)}
                                                     >
                                                         Edit
                                                     </button>
@@ -1229,6 +1257,7 @@ const BudgetTracker = () => {
                                 })
                         )}
                     </div>
+
 
                     {/* Show "Show All" & "Delete All Categories" together for consistency */}
                     {categories.length > 3 && (

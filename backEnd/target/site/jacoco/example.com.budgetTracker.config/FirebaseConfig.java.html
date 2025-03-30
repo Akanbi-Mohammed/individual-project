@@ -9,41 +9,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 @Configuration
-<span class="nc" id="L17">public class FirebaseConfig {</span>
+<span class="nc" id="L15">public class FirebaseConfig {</span>
 
-    @PostConstruct
-    public void init() {
-        try {
-            // Retrieve the file path from the environment variable
-<span class="nc" id="L23">            String credentialPath = System.getenv(&quot;GOOGLE_APPLICATION_CREDENTIALS&quot;);</span>
-<span class="nc bnc" id="L24" title="All 4 branches missed.">            if (credentialPath == null || credentialPath.isEmpty()) {</span>
-<span class="nc" id="L25">                throw new IllegalStateException(&quot;GOOGLE_APPLICATION_CREDENTIALS environment variable is not set!&quot;);</span>
-            }
-<span class="nc" id="L27">            InputStream serviceAccount = new FileInputStream(credentialPath);</span>
+    private Firestore firestore;
 
-<span class="nc" id="L29">            FirebaseOptions options = FirebaseOptions.builder()</span>
-<span class="nc" id="L30">                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))</span>
-<span class="nc" id="L31">                    .setDatabaseUrl(&quot;https://level4-project-default-rtdb.firebaseio.com/&quot;)</span>
-<span class="nc" id="L32">                    .build();</span>
-
-<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (FirebaseApp.getApps().isEmpty()) {</span>
-<span class="nc" id="L35">                FirebaseApp.initializeApp(options);</span>
-            }
-<span class="nc" id="L37">        } catch (IOException e) {</span>
-<span class="nc" id="L38">            e.printStackTrace();</span>
-            // Optionally rethrow or handle the exception as needed
-<span class="nc" id="L40">        }</span>
-<span class="nc" id="L41">    }</span>
-
-    // Firestore bean to interact with Firestore database
     @Bean
-    public Firestore getFirestore() {
-<span class="nc" id="L46">        return FirestoreClient.getFirestore();</span>
+    public Firestore getFirestore() throws IOException {
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (FirebaseApp.getApps().isEmpty()) {</span>
+<span class="nc" id="L22">            FirebaseOptions options = FirebaseOptions.builder()</span>
+<span class="nc" id="L23">                    .setCredentials(GoogleCredentials.getApplicationDefault())</span>
+<span class="nc" id="L24">                    .build();</span>
+<span class="nc" id="L25">            FirebaseApp.initializeApp(options);</span>
+        }
+
+<span class="nc" id="L28">        this.firestore = FirestoreClient.getFirestore();</span>
+<span class="nc" id="L29">        return firestore;</span>
     }
 }
+
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

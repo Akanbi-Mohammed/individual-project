@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: tests.RecurringExpenseControllerTest
 -------------------------------------------------------------------------------
-Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.504 s - in tests.RecurringExpenseControllerTest
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.335 s - in tests.RecurringExpenseControllerTest

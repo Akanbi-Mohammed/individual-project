@@ -37,25 +37,17 @@ public class CategoryService {
         DocumentReference docRef = firestore.collection("categories").document(uid);
         DocumentSnapshot document = docRef.get().get();
 
-        List<String> userCategories = new ArrayList<>();
-        if (document.exists() && document.get("categories") instanceof List) {
-            userCategories = new ArrayList<>((List<String>) document.get("categories"));
+        if (!document.exists()) {
+            // No categories set for the user—initialize with defaults
+            docRef.set(Map.of("categories", DEFAULT_CATEGORIES)).get();
+            return new ArrayList<>(DEFAULT_CATEGORIES);
+        } else {
+            // Return exactly what's stored for this user
+            List<String> userCategories = (List<String>) document.get("categories");
+            return userCategories != null ? new ArrayList<>(userCategories) : new ArrayList<>();
         }
-
-        // Ensure the user's categories do not include outdated defaults
-        List<String> updatedUserCategories = userCategories.stream()
-                .filter(cat -> !DEFAULT_CATEGORIES.contains(cat)) // Keep only user-added categories
-                .collect(Collectors.toList());
-
-        // Merge user-defined categories with the latest defaults
-        Set<String> mergedCategories = new HashSet<>(DEFAULT_CATEGORIES);
-        mergedCategories.addAll(updatedUserCategories);
-
-        // Update Firestore if needed
-        docRef.set(Map.of("categories", new ArrayList<>(mergedCategories)), SetOptions.merge()).get();
-
-        return new ArrayList<>(mergedCategories);
     }
+
 
 
 

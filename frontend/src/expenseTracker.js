@@ -98,7 +98,7 @@ const ExpenseTracker = () => {
             if (!user) return; // Ensure user is authenticated
 
             const token = await user.getIdToken();
-            const response = await axios.get("https://budget-tracker-backend-666575572595.europe-west2.run.app/api/budgets", {
+            const response = await axios.get("https://individual-project-lxa2.onrender.com/api/budgets", {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setBudgets(response.data); // Set all budgets without filtering
@@ -112,11 +112,12 @@ const ExpenseTracker = () => {
             if (!user) return;
             const token = await user.getIdToken();
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/categories",
+                "https://individual-project-lxa2.onrender.com/api/categories",
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             if (response.status === 200 && Array.isArray(response.data)) {
-                setCategories(response.data);
+                setCategories(response.data.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())));
+
             }
         } catch (error) {
             console.error("Error fetching categories from backend:", error);
@@ -135,7 +136,7 @@ const ExpenseTracker = () => {
             console.log("🔥 Firebase Token:", token); // ✅ Print token to console for debugging
 
             const response = await axios.get(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses",
+                "https://individual-project-lxa2.onrender.com/api/expenses",
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -211,7 +212,7 @@ const ExpenseTracker = () => {
 
             const token = await user.getIdToken();
             const response = await axios.delete(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/${expenseId}`,
+                `https://individual-project-lxa2.onrender.com/api/expenses/${expenseId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -359,7 +360,7 @@ const ExpenseTracker = () => {
 
             // ✅ Fix API Request Structure
             const response = await axios.post(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses",
+                "https://individual-project-lxa2.onrender.com/api/expenses",
                 {
                     category: finalCategory,
                     amount: parseFloat(amount),
@@ -504,7 +505,7 @@ const ExpenseTracker = () => {
             const token = await user.getIdToken();
 
             await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/${editingExpenseId}`,
+                `https://individual-project-lxa2.onrender.com/api/expenses/${editingExpenseId}`,
                 {
                     id: editingExpenseId,
                     category: finalCategory,
@@ -544,7 +545,7 @@ const ExpenseTracker = () => {
     const saveExpenseChanges = async () => {
         const finalCategory = category === "Other" ? customCategory : category;
 
-        if (!finalCategory || !amount || !date) {
+        if (!finalCategory || !editAmount || !date) {
             Swal.fire({
                 title: "⚠️ Missing Fields!",
                 text: "Please fill in all fields before saving.",
@@ -558,18 +559,13 @@ const ExpenseTracker = () => {
         const today = new Date();
         const selectedMonth = date.slice(0, 7); // Extract YYYY-MM
 
-
-
-        // 💰 Check if Spending Cap is Exceeded
-        const categorySpendingTotal = categorySpending[finalCategory] || 0;
-
         const previousExpense = expenses.find((exp) => exp.id === editingExpenseId);
         const previousAmount = previousExpense ? previousExpense.amount : 0;
-        const newSpendingTotal = categorySpendingTotal - previousAmount + parseFloat(amount);
-
 
         // 🔍 Check if a budget exists for this category in the selected month
-        const budgetForCategory = budgets.find((b) => b.category === finalCategory && b.month === selectedMonth);
+        const budgetForCategory = budgets.find(
+            (b) => b.category === finalCategory && b.month === selectedMonth
+        );
 
         if (!budgetForCategory) {
             Swal.fire({
@@ -586,23 +582,21 @@ const ExpenseTracker = () => {
                 cancelButtonText: "Cancel",
                 confirmButtonColor: "#007acc",
             }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "/budgets"; // Redirect to budgets page
-                }
+                if (result.isConfirmed) window.location.href = "/budgets";
             });
             return;
         }
 
-        // ✅ Ensure correct total expenses calculation (subtract previous amount first)
+        // ✅ Calculate updated total expenses for the category this month
         const totalExpensesForMonth = expenses
             .filter((exp) => exp.category === finalCategory && exp.date.startsWith(selectedMonth))
             .reduce((acc, exp) => acc + exp.amount, 0);
 
-        const newTotal = totalExpensesForMonth - previousAmount + parseFloat(amount);
+        const newTotal = totalExpensesForMonth - previousAmount + parseFloat(editAmount);
         const budgetLimit = budgetForCategory.amount;
         const threshold = budgetLimit * 0.8;
 
-        // ⚠️ Warn if exceeding 80% of the budget
+        // ⚠️ Budget threshold warning
         if (previousAmount <= threshold && newTotal > threshold && newTotal <= budgetLimit) {
             Swal.fire({
                 title: "⚠️ Budget Warning!",
@@ -613,7 +607,7 @@ const ExpenseTracker = () => {
             });
         }
 
-        // 🚨 Ask user if they want to proceed when exceeding budget
+        // 🚨 Confirm if user wants to exceed budget
         if (newTotal > budgetLimit) {
             const proceed = await Swal.fire({
                 title: "⚠️ Budget Exceeded!",
@@ -626,9 +620,7 @@ const ExpenseTracker = () => {
                 cancelButtonColor: "#ff4d4d",
             });
 
-            if (!proceed.isConfirmed) {
-                return; // 🚫 Exit if user cancels
-            }
+            if (!proceed.isConfirmed) return;
         }
 
         try {
@@ -639,18 +631,14 @@ const ExpenseTracker = () => {
             }
 
             const token = await user.getIdToken();
-            console.log("Firebase Token:", token);
 
-            // ❌ Remove the invalid setDescription(...) call from the request body
-            // ✅ Instead, pass a "description" property with the updated description
             await axios.put(
-                `https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/${editingExpenseId}`,
+                `https://individual-project-lxa2.onrender.com/api/expenses/${editingExpenseId}`,
                 {
                     id: editingExpenseId,
                     category: finalCategory,
-                    amount: parseFloat(amount),
+                    amount: parseFloat(editAmount),
                     date,
-                    // If you have a local "description" state, pass it here:
                     description,
                 },
                 {
@@ -660,15 +648,14 @@ const ExpenseTracker = () => {
                 }
             );
 
-            // 🛠 Update spending in state
+            // 🛠 Update local category spending state
             setCategorySpending((prev) => ({
                 ...prev,
-                [finalCategory]: (prev[finalCategory] || 0) - previousAmount + parseFloat(amount),
+                [finalCategory]: (prev[finalCategory] || 0) - previousAmount + parseFloat(editAmount),
             }));
 
-            fetchExpenses(); // Refresh expenses
-            resetForm(); // Reset input fields
-            setEditingExpenseId(null);
+            fetchExpenses(); // Refresh the expenses from backend
+            resetForm(); // Clear form states
 
             Swal.fire({
                 title: "✅ Expense Updated!",
@@ -690,14 +677,6 @@ const ExpenseTracker = () => {
             });
         }
     };
-
-
-
-
-
-
-
-
 
     const resetForm = () => {
         setEditMode(false);
@@ -740,7 +719,7 @@ const ExpenseTracker = () => {
 
         try {
             const token = await auth.currentUser.getIdToken();
-            await axios.delete("https://budget-tracker-backend-666575572595.europe-west2.run.app/api/expenses/delete-all", {
+            await axios.delete("https://individual-project-lxa2.onrender.com/api/expenses/delete-all", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchExpenses();
@@ -833,7 +812,7 @@ const ExpenseTracker = () => {
             }
             const token = await user.getIdToken();
             await axios.post(
-                "https://budget-tracker-backend-666575572595.europe-west2.run.app/api/recurring-expenses/sync",
+                "https://individual-project-lxa2.onrender.com/api/recurring-expenses/sync",
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
